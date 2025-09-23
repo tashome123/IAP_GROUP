@@ -1,7 +1,7 @@
 <?php
 require 'conf.php';
 
-$directories = ['Layouts', 'Forms', 'Global', 'Proc'];
+$directories = ['Layouts','Global', 'Proc'];
 
 spl_autoload_register(function ($class_name) use ($directories) {
     foreach ($directories as $directory) {
@@ -15,9 +15,8 @@ spl_autoload_register(function ($class_name) use ($directories) {
 // Create an instance of the class
 $ObjSendMail = new SendMail();
 $ObjLayout = new Layouts();
-$ObjForm = new Forms();
 
-$ObjAuth = new auth();
+$ObjAuth = new autho();
 $ObjFncs = new fncs();
 
 

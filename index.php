@@ -1,7 +1,9 @@
 <?php
 
+require 'ClassAutoLoad.php';
 
-
-
-$ObjLayouts = new Layouts();
-$ObjLayouts->header($conf);
+$ObjLayout->header($conf);
+$ObjLayout->navbar($conf);
+$ObjLayout->banner($conf);
+$ObjLayout->content($conf);
+$ObjLayout->footer($conf);

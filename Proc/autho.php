@@ -1,5 +1,5 @@
 <?php
-class auth{
+class autho{
 
     // Method to bind email template variables
     public function bindEmailTemplate($template, $variables) {
