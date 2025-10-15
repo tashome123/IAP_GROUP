@@ -12,10 +12,19 @@ require "ClassAutoLoad.php";
         <div class="container text-center py-5">
             <h1 class="display-3 font-weight-bold">Welcome to StrathEventique</h1>
             <p class="lead mb-4">Your premier platform for discovering and managing amazing events</p>
+            
+            <?php if(!isset($_SESSION['user_id'])): ?>
             <div class="mt-4">
                 <a href="signup.php" class="btn btn-light btn-lg mx-2">Get Started</a>
                 <a href="signin.php" class="btn btn-outline-light btn-lg mx-2">Sign In</a>
             </div>
+            <?php else: ?>
+            <div class="mt-4">
+                <h3 class="text-white">Welcome back, <?php echo $_SESSION['user_name']; ?>!</h3>
+                <a href="#events" class="btn btn-light btn-lg mx-2">Browse Events</a>
+                <a href="#create" class="btn btn-outline-light btn-lg mx-2">Create Event</a>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -76,6 +85,7 @@ require "ClassAutoLoad.php";
     </div>
 
     <!-- CTA Section -->
+    <?php if(!isset($_SESSION['user_id'])): ?>
     <div class="bg-light py-5">
         <div class="container text-center">
             <h2 class="mb-4">Ready to Get Started?</h2>
@@ -83,6 +93,7 @@ require "ClassAutoLoad.php";
             <a href="signup.php" class="btn btn-primary btn-lg">Create Your Account</a>
         </div>
     </div>
+    <?php endif; ?>
 </main>
 
 <?php $ObjLayout->footer($conf); ?>

@@ -12,11 +12,10 @@ spl_autoload_register(function ($class_name) use ($directories) {
         }
     }
 });
-// Create an instance of the class
+
+// Create an instance of the classes
 $ObjSendMail = new SendMail();
 $ObjLayout = new Layouts();
 $ObjAuth = new autho();
 $ObjFncs = new fncs();
-
-
-$ObjAuth->signup($conf, $ObjFncs, $lang, $ObjSendMail);
+$ObjDB = new Database($conf);

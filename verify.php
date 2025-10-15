@@ -1,8 +1,8 @@
 <?php
-
 require "ClassAutoLoad.php";
 
-$ObjAuth->signup($conf, $ObjFncs, $lang, $ObjSendMail, $ObjDB);
+// Call verification method
+$ObjAuth->verifyAccount($conf, $ObjFncs, $lang, $ObjSendMail, $ObjDB);
 
 $ObjLayout->header($conf);
 $ObjLayout->navbar($conf);
@@ -23,4 +23,4 @@ $ObjLayout->navbar($conf);
 </div>
 
 <?php
-$ObjLayout->signup($conf);
+$ObjLayout->verify($conf);
