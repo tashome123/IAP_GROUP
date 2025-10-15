@@ -9,10 +9,11 @@ class autho{
         return $template;
     }
 
-    public function signup($conf, $ObjFncs, $lang, $ObjSendMail, $ObjDB){
-        if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])){
+    public function signup($conf, $ObjFncs, $lang, $ObjSendMail, $ObjDB)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
 
-            $errors = array(); // Initialize an array to hold error messages
+            $errors = array();
 
             $fullname = $_SESSION['fullname'] = ucwords(strtolower($_POST['fullname']));
             $email = $_SESSION['email'] = strtolower($_POST['email']);
@@ -21,7 +22,7 @@ class autho{
             // Simple validation (you can expand this as needed)
 
             // Verify fullname
-            if(empty($fullname) || !preg_match("/^[a-zA-Z ]*$/", $fullname)) {
+            if (empty($fullname) || !preg_match("/^[a-zA-Z ]*$/", $fullname)) {
                 $errors['fullname_error'] = "Only letters and white space allowed in fullname";
             }
 
@@ -32,7 +33,7 @@ class autho{
 
             // Check if email already exists
             $existing_user = $ObjDB->fetch("SELECT id FROM users WHERE email = ?", [$email]);
-            if($existing_user) {
+            if ($existing_user) {
                 $errors['email_exists'] = "An account with this email already exists";
             }
 
@@ -42,65 +43,50 @@ class autho{
                 $errors['mailDomain_error'] = "Email domain must be one of the following: " . implode(", ", $conf['valid_email_domain']);
             }
             // Verify password length
-            if(strlen($password) < $conf['min_password_length']) {
+            if (strlen($password) < $conf['min_password_length']) {
                 $errors['password_error'] = "Password must be at least " . $conf['min_password_length'] . " characters long";
             }
 
             // If there are errors, display them
-            if(!count($errors)){
+            if (!count($errors)) {
 
-                // Generate a 6-digit verification code
-                $verification_code = sprintf("%06d", mt_rand(1, 999999));
-                $_SESSION['verification_code'] = $verification_code;
-                $_SESSION['verification_email'] = $email;
-                $_SESSION['pending_fullname'] = $fullname;
-                $_SESSION['pending_password'] = password_hash($password, PASSWORD_DEFAULT);
+                if (!count($errors)) {
+                    $verification_code = sprintf("%06d", mt_rand(1, 999999));
+                    $_SESSION['verification_code'] = $verification_code;
+                    $_SESSION['verification_email'] = $email;
+                    $_SESSION['pending_fullname'] = $fullname;
+                    $_SESSION['pending_password'] = password_hash($password, PASSWORD_DEFAULT);
 
-                // Bind email template variables
-                $email_variables = [
-                    'site_name' => $conf['site_name'],
-                    'fullname' => $fullname,
-                    'activation_code' => $verification_code
-                ];
+                    $email_variables = [
+                        'site_name' => $conf['site_name'],
+                        'fullname' => $fullname,
+                        'activation_code' => $verification_code
+                    ];
+                    $mailCnt = [
+                        'name_from' => $conf['site_name'],
+                        'mail_from' => $conf['admin_email'],
+                        'name_to' => $fullname,
+                        'mail_to' => $email,
+                        'subject' => $this->bindEmailTemplate($lang["ver_reg_subj"], $email_variables),
+                        'body' => nl2br($this->bindEmailTemplate($lang["ver_reg_body"], $email_variables))
+                    ];
 
-                $mailCnt = [
-                    'name_from' => $conf['site_name'],
-                    'mail_from' => $conf['admin_email'],
-                    'name_to' => $fullname,
-                    'mail_to' => $email,
-                    'subject' => $this->bindEmailTemplate($lang["ver_reg_subj"], $email_variables),
-                    'body' => nl2br($this->bindEmailTemplate($lang["ver_reg_body"], $email_variables))
-                ];
-
-                try {
+                    // Send the email
                     $result = $ObjSendMail->Send_Mail($conf, $mailCnt);
-                    if (!$result) {
-                        error_log("Failed to send verification email to: " . $email);
+
+                    if ($result) {
+                        header("Location: verify.php");
+                        exit();
+                    } else {
                         $errors['mail_error'] = "Failed to send verification email";
                         $ObjFncs->setMsg('errors', $errors, 'danger');
                         $ObjFncs->setMsg('msg', 'Please fix the errors below and try again.', 'danger');
-                    } else {
-                        // Redirect only if email sent successfully
-                        header("Location: verify.php");
-                        exit();
                     }
-                } catch (Exception $e) {
-                    error_log("Mail error: " . $e->getMessage());
-                    $errors['mail_error'] = "Error sending verification email";
+                } else {
                     $ObjFncs->setMsg('errors', $errors, 'danger');
                     $ObjFncs->setMsg('msg', 'Please fix the errors below and try again.', 'danger');
                 }
-
-
-                // Redirect to verification page
-                header("Location: verify.php");
-                exit();
-            } else {
-                // Setting errors
-                $ObjFncs->setMsg('errors', $errors, 'danger');
-                $ObjFncs->setMsg('msg', 'Please fix the errors below and try again.', 'danger');
             }
-
         }
     }
 

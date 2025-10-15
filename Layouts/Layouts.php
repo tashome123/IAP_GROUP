@@ -43,61 +43,54 @@ class Layouts {
             <!-- Custom styles for this template -->
             <link href="https://https://getbootstrap.com/docs/4.6/dist/css/jumbotron.css" rel="stylesheet">
         </head>
-        <?php
+    <?php
+
     }
-public function navbar($conf){
-        // Get the current page filename
+    
+    public function navbar($conf){
         $current_page = basename($_SERVER['PHP_SELF']);
-        
-        // Check if user is logged in
         $is_logged_in = isset($_SESSION['user_id']);
         ?>
-    <body>
-
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="index.php">StrathEventique</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item <?php echo ($current_page == 'index.php' || $current_page == 'home.php') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="index.php">Home <?php echo ($current_page == 'index.php' || $current_page == 'home.php') ? '<span class="sr-only">(current)</span>' : ''; ?></a>
-                </li>
-                
-                <?php if(!$is_logged_in): ?>
-                <li class="nav-item <?php echo ($current_page == 'signin.php') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="signin.php">Sign In <?php echo ($current_page == 'signin.php') ? '<span class="sr-only">(current)</span>' : ''; ?></a>
-                </li>
-                <li class="nav-item <?php echo ($current_page == 'signup.php') ? 'active' : ''; ?>">
-                    <a class="nav-link" href="signup.php">Sign Up <?php echo ($current_page == 'signup.php') ? '<span class="sr-only">(current)</span>' : ''; ?></a>
-                </li>
+        <body>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="index.php">StrathEventique</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <?php if(!$is_logged_in): ?>
+                        <li class="nav-item <?php echo ($current_page == 'signin.php') ? 'active' : ''; ?>">
+                            <a class="nav-link" href="signin.php">Sign In <?php echo ($current_page == 'signin.php') ? '<span class="sr-only">(current)</span>' : ''; ?></a>
+                        </li>
+                        <li class="nav-item <?php echo ($current_page == 'signup.php') ? 'active' : ''; ?>">
+                            <a class="nav-link" href="signup.php">Sign Up <?php echo ($current_page == 'signup.php') ? '<span class="sr-only">(current)</span>' : ''; ?></a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+                <?php if($is_logged_in): ?>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user-circle"></i> <?php echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Profile'; ?>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="profile.php"><i class="fas fa-user"></i> My Profile</a>
+                                <a class="dropdown-item" href="settings.php"><i class="fas fa-cog"></i> Settings</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </div>
+                        </li>
+                    </ul>
                 <?php endif; ?>
-            </ul>
-            
-            <?php if($is_logged_in): ?>
-            <!-- User Profile Dropdown -->
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-user-circle"></i> <?php echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Profile'; ?>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="profile.php"><i class="fas fa-user"></i> My Profile</a>
-                        <a class="dropdown-item" href="settings.php"><i class="fas fa-cog"></i> Settings</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                    </div>
-                </li>
-            </ul>
-            <?php endif; ?>
-        </div>
-    </nav>
-<?php
-}
+            </div>
+        </nav>
+        <?php
+    }
 
-public function banner($conf){
+
+
+        public function banner($conf){
     ?>
         <main role="main">
 

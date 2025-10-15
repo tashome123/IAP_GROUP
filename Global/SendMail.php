@@ -33,9 +33,10 @@ class SendMail {
             $mail->Body    = $mailCnt['body'];
 
             $mail->send();
-            echo 'Message has been sent';
+            return true; // Success
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            return false; // Failure
         }
     }
 }
