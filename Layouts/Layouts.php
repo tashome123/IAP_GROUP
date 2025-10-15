@@ -44,6 +44,8 @@ class Layouts {
         <?php
     }
 public function navbar($conf){
+        // Get the current page filename
+        $current_page = basename($_SERVER['PHP_SELF']);
         ?>
     <body>
 
@@ -55,20 +57,16 @@ public function navbar($conf){
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
+                <li class="nav-item <?php echo ($current_page == 'index.php' || $current_page == 'home.php') ? 'active' : ''; ?>">
+                    <a class="nav-link" href="index.php">Home <?php echo ($current_page == 'index.php' || $current_page == 'home.php') ? '<span class="sr-only">(current)</span>' : ''; ?></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="signin.php">Sign In</a>
+                <li class="nav-item <?php echo ($current_page == 'signin.php') ? 'active' : ''; ?>">
+                    <a class="nav-link" href="signin.php">Sign In <?php echo ($current_page == 'signin.php') ? '<span class="sr-only">(current)</span>' : ''; ?></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="signup.php">Sign Up</a>
+                <li class="nav-item <?php echo ($current_page == 'signup.php') ? 'active' : ''; ?>">
+                    <a class="nav-link" href="signup.php">Sign Up <?php echo ($current_page == 'signup.php') ? '<span class="sr-only">(current)</span>' : ''; ?></a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
         </div>
     </nav>
 <?php
@@ -192,7 +190,6 @@ public function banner($conf){
         <body class="text-center">
 
         <form class="form-signin">
-            <img class="mb-4" src="https://getbootstrap.com/docs/4.6/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
             <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
             <label for="inputEmail" class="sr-only">Email address</label>
             <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
