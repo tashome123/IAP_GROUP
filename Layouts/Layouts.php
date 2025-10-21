@@ -114,10 +114,10 @@ class Layouts {
 
                     <?php if(!$is_logged_in): ?>
                         <li class="nav-item <?php echo ($current_page == 'signin.php') ? 'active' : ''; ?>">
-                            <a class="nav-link" href="signin.php">Sign In ...</a>
+                            <a class="nav-link" href="signin.php">Sign In</a>
                         </li>
                         <li class="nav-item <?php echo ($current_page == 'signup.php') ? 'active' : ''; ?>">
-                            <a class="nav-link" href="signup.php">Sign Up ...</a>
+                            <a class="nav-link" href="signup.php">Sign Up</a>
                         </li>
                     <?php endif; ?>
                 </ul>
