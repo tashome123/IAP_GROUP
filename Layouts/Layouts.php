@@ -108,12 +108,16 @@ class Layouts {
             </button>
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav mr-auto">
+                    <li class="nav-item <?php echo ($current_page == 'events.php') ? 'active' : ''; ?>">
+                        <a class="nav-link" href="events.php">Events</a>
+                    </li>
+
                     <?php if(!$is_logged_in): ?>
                         <li class="nav-item <?php echo ($current_page == 'signin.php') ? 'active' : ''; ?>">
-                            <a class="nav-link" href="signin.php">Sign In <?php echo ($current_page == 'signin.php') ? '<span class="sr-only">(current)</span>' : ''; ?></a>
+                            <a class="nav-link" href="signin.php">Sign In ...</a>
                         </li>
                         <li class="nav-item <?php echo ($current_page == 'signup.php') ? 'active' : ''; ?>">
-                            <a class="nav-link" href="signup.php">Sign Up <?php echo ($current_page == 'signup.php') ? '<span class="sr-only">(current)</span>' : ''; ?></a>
+                            <a class="nav-link" href="signup.php">Sign Up ...</a>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -652,6 +656,19 @@ class Layouts {
                         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                             <div class="card" style="border-radius: 15px;">
                                 <div class="card-body p-5">
+
+                                    <?php
+                                    // Display messages
+                                    if (isset($_SESSION['msg'])) {
+                                        $msg_type = isset($_SESSION['msg_type']) ? $_SESSION['msg_type'] : 'danger';
+                                        echo '<div class="alert alert-' . $msg_type . ' text-center">';
+                                        echo $_SESSION['msg'];
+                                        echo '</div>';
+                                        unset($_SESSION['msg']);
+                                        unset($_SESSION['msg_type']);
+                                    }
+                                    ?>
+
                                     <h3 class="text-center mb-4">Reset Your Password</h3>
                                     <form method="post">
                                         <input type="hidden" name="reset_password" value="1">
@@ -675,6 +692,42 @@ class Layouts {
                 </div>
             </div>
         </section>
+        <?php
+    }
+    public function public_events_list($conf, $events) {
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="text-center mb-5">
+                <h1>Upcoming Events</h1>
+                <p class="lead text-muted">Discover the next big thing happening at Strathmore</p>
+            </div>
+
+            <div class="row">
+                <?php if (count($events) > 0): ?>
+                    <?php foreach ($events as $event): ?>
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="https://placehold.co/600x400/0a2540/D4AF37?text=<?php echo htmlspecialchars(str_replace(' ', '+', $event['title'])); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title"><?php echo htmlspecialchars($event['title']); ?></h5>
+                                    <p class="card-text text-muted">
+                                        <strong>Date:</strong> <?php echo date("D, M j, Y", strtotime($event['event_date'])); ?><br>
+                                        <strong>Time:</strong> <?php echo date("g:i A", strtotime($event['event_time'])); ?><br>
+                                        <strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?>
+                                    </p>
+                                    <p class="card-text flex-grow-1"><?php echo htmlspecialchars(substr($event['description'], 0, 100)) . '...'; ?></p>
+                                    <a href="#" class="btn btn-primary mt-auto">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="col-12">
+                        <p class="text-center text-muted">There are no upcoming events at the moment. Please check back soon!</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
         <?php
     }
 }
