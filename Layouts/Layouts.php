@@ -230,6 +230,43 @@ class Layouts {
         </body>
         </html>
         <?php
+
+    }
+    public function create_event_layout_header($conf) {
+        $title = isset($conf['title']) && $conf['title'] !== '' ? $conf['title'] : 'StrathEventique';
+        ?>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <title><?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?></title>
+
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css" rel="stylesheet">
+
+            <link rel="icon" href="assets/StrathEventique_Logo.png" type="image/png">
+            <style>
+                /* Your root color variables */
+                :root{
+                    --navy: #0a2540;
+                    --gold: #D4AF37;
+                }
+                .btn-primary {
+                    background-color: var(--navy) !important;
+                    color: var(--gold) !important;
+                }
+            </style>
+        </head>
+        <?php
+    }
+
+    public function create_event_layout_footer($conf) {
+        ?>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.umd.min.js"></script>
+        </body>
+        </html>
+        <?php
     }
     public function signin($conf){
         ?>
@@ -598,7 +635,8 @@ class Layouts {
                                         </small>
                                     </div>
                                     <div>
-                                        <a href="#" class="btn btn-sm btn-info">Edit</a>
+                                        <a href="edit-event.php?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-info">Edit</a>
+                                        <a href="delete-event.php?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this event?');">Delete</a>
                                     </div>
                                 </li>
                             <?php endforeach; ?>
@@ -716,7 +754,7 @@ class Layouts {
                                         <strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?>
                                     </p>
                                     <p class="card-text flex-grow-1"><?php echo htmlspecialchars(substr($event['description'], 0, 100)) . '...'; ?></p>
-                                    <a href="#" class="btn btn-primary mt-auto">View Details</a>
+                                    <a href="event-details.php?id=<?php echo $event['id']; ?>" class="btn btn-primary mt-auto">View Details</a>
                                 </div>
                             </div>
                         </div>
@@ -726,6 +764,153 @@ class Layouts {
                         <p class="text-center text-muted">There are no upcoming events at the moment. Please check back soon!</p>
                     </div>
                 <?php endif; ?>
+            </div>
+        </div>
+        <?php
+    }
+    public function event_details_view($conf, $event) {
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-lg">
+                        <img src="https://placehold.co/800x400/0a2540/D4AF37?text=<?php echo htmlspecialchars(str_replace(' ', '+', $event['title'])); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                        <div class="card-body p-5">
+                            <h1 class="card-title mb-3"><?php echo htmlspecialchars($event['title']); ?></h1>
+
+                            <div class="d-flex text-muted mb-4">
+                                <div class="me-4">
+                                    <i class="fas fa-calendar-alt me-2"></i>
+                                    <?php echo date("l, F j, Y", strtotime($event['event_date'])); ?>
+                                </div>
+                                <div class="me-4">
+                                    <i class="fas fa-clock me-2"></i>
+                                    <?php echo date("g:i A", strtotime($event['event_time'])); ?>
+                                </div>
+                                <div>
+                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                    <?php echo htmlspecialchars($event['location']); ?>
+                                </div>
+                            </div>
+
+                            <h4 class="mt-4">About this Event</h4>
+                            <p class="card-text" style="white-space: pre-wrap;"><?php echo htmlspecialchars($event['description']); ?></p>
+
+                            <div class="d-grid gap-2 mt-5">
+                                <a href="#" class="btn btn-primary btn-lg">Register for this Event</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    public function edit_event_form($conf, $event) {
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="text-center mb-4">Edit Event</h2>
+                            <form method="POST">
+                                <div class="mb-3">
+                                    <label class="form-label">Event Title</label>
+                                    <input type="text" name="event_title" class="form-control" value="<?php echo htmlspecialchars($event['title']); ?>" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Event Description</label>
+                                    <textarea name="event_description" class="form-control" rows="5" required><?php echo htmlspecialchars($event['description']); ?></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Date</label>
+                                        <input type="date" name="event_date" class="form-control" value="<?php echo htmlspecialchars($event['event_date']); ?>" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Time</label>
+                                        <div class="form-outline" data-mdb-timepicker-init>
+                                            <input type="text" name="event_time" class="form-control" id="timepicker" value="<?php echo htmlspecialchars($event['event_time']); ?>" required />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Location / Venue</label>
+                                    <input type="text" name="event_location" class="form-control" value="<?php echo htmlspecialchars($event['location']); ?>" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    public function admin_users_list($conf, $users) {
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>User Management</h1>
+            </div>
+
+            <?php
+            // Display feedback messages
+            if (isset($_SESSION['msg'])) {
+                $msg_type = isset($_SESSION['msg_type']) ? $_SESSION['msg_type'] : 'info';
+                echo '<div class="alert alert-' . $msg_type . '">' . $_SESSION['msg'] . '</div>';
+                unset($_SESSION['msg']);
+                unset($_SESSION['msg_type']);
+            }
+            ?>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>All Registered Users</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th style="width: 200px;">Change Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($users as $user): ?>
+                                <tr>
+                                    <td><?php echo $user['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($user['fullname']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['email']); ?></td>
+                                    <td>
+                                        <span class="badge bg-<?php echo ($user['role'] === 'admin') ? 'primary' : 'secondary'; ?>">
+                                            <?php echo htmlspecialchars($user['role']); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <form method="POST" class="d-flex">
+                                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                            <input type="hidden" name="change_role" value="1">
+                                            <select name="new_role" class="form-select form-select-sm me-2">
+                                                <option value="user" <?php echo ($user['role'] === 'user') ? 'selected' : ''; ?>>User</option>
+                                                <option value="admin" <?php echo ($user['role'] === 'admin') ? 'selected' : ''; ?>>Admin</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         <?php
