@@ -1,17 +1,6 @@
 <?php
 require "ClassAutoLoad.php";
 
-// Check for admin role
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    // Optional: set a message for the user
-    $_SESSION['msg'] = 'You do not have permission to access this page.';
-    $_SESSION['msg_type'] = 'danger';
-
-    // Redirect non-admins to the homepage
-    header("Location: index.php");
-    exit();
-}
-
 // Redirect user to signin page if they are not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: signin.php");
@@ -27,25 +16,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $event_location = $_POST['event_location'];
     $user_id = $_SESSION['user_id'];
 
-    // Insert into database
-    $ObjDB->insert('events', [
-        'user_id' => $user_id,
-        'title' => $event_title,
-        'description' => $event_desc,
-        'event_date' => $event_date,
-        'event_time' => $event_time,
-        'location' => $event_location
-    ]);
+    // --- START: CORRECTED CODE ---
+    // Attempt to insert the event into the database
+    try {
+        // Attempt to insert the event into the database
+        $result = $ObjDB->insert('events', [
+            'user_id' => $user_id,
+            'title' => $event_title,
+            'description' => $event_desc,
+            'event_date' => $event_date,
+            'event_time' => $event_time,
+            'location' => $event_location
+        ]);
 
-    // Redirect to a new dashboard page (we'll create this next)
-    header("Location: dashboard.php");
-    exit();
+        if ($result) {
+            // If successful, redirect to the dashboard with a success message
+            $_SESSION['msg'] = 'Event created successfully!';
+            $_SESSION['msg_type'] = 'success';
+            header("Location: dashboard.php");
+            exit();
+        } else {
+            // If the insert method returns false without an error
+            throw new Exception("The event could not be saved for an unknown reason.");
+        }
+
+    } catch (Exception $e) {
+        // If any error occurs, stay on the page and display the error
+        $_SESSION['msg'] = 'Error creating event: ' . $e->getMessage();
+        $_SESSION['msg_type'] = 'danger';
+        // We don't redirect here, so the user sees the error on the create page
+    }
+    // --- END: CORRECTED CODE ---
 }
 
 // Display the page layout
-$ObjLayout->header($conf);
+$ObjLayout->create_event_layout_header($conf);
 $ObjLayout->navbar($conf);
-// We'll create the create_event_form() function in the next step
 $ObjLayout->create_event_form($conf);
-$ObjLayout->footer($conf);
+$ObjLayout->create_event_layout_footer($conf);
 ?>

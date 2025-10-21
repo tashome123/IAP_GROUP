@@ -575,6 +575,14 @@ class Layouts {
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-body">
+                            <?php
+                            if (isset($_SESSION['msg'])) {
+                                $msg_type = isset($_SESSION['msg_type']) ? $_SESSION['msg_type'] : 'danger';
+                                echo '<div class="alert alert-' . $msg_type . '">' . $_SESSION['msg'] . '</div>';
+                                unset($_SESSION['msg']);
+                                unset($_SESSION['msg_type']);
+                            }
+                            ?>
                             <h2 class="text-center mb-4">Create a New Event</h2>
                             <form method="POST">
                                 <div class="mb-3">
