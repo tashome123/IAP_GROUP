@@ -638,6 +638,7 @@ class Layouts {
                                         </small>
                                     </div>
                                     <div>
+                                        <a href="view-attendees.php?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-success">View Attendees</a>
                                         <a href="edit-event.php?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-info">Edit</a>
                                         <a href="delete-event.php?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this event?');">Delete</a>
                                     </div>
@@ -735,12 +736,23 @@ class Layouts {
         </section>
         <?php
     }
-    public function public_events_list($conf, $events) {
+    public function public_events_list($conf, $events, $search_term = '', $current_page = 1, $total_pages = 1) {
         ?>
         <div class="container" style="margin-top: 100px;">
             <div class="text-center mb-5">
                 <h1>Upcoming Events</h1>
                 <p class="lead text-muted">Discover the next big thing happening at Strathmore</p>
+
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-6">
+                        <form method="GET" action="events.php">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Search for events..." value="<?php echo htmlspecialchars($search_term); ?>">
+                                <button class="btn btn-primary" type="submit">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
@@ -764,12 +776,34 @@ class Layouts {
                     <?php endforeach; ?>
                 <?php else: ?>
                     <div class="col-12">
-                        <p class="text-center text-muted">There are no upcoming events at the moment. Please check back soon!</p>
+                        <p class="text-center text-muted">There are no upcoming events matching your search. Please check back soon!</p>
                     </div>
                 <?php endif; ?>
             </div>
-        </div>
-        <?php
+
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    <?php if ($current_page > 1): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?page=<?php echo $current_page - 1; ?>&search=<?php echo urlencode($search_term); ?>">Previous</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                        <li class="page-item <?php echo ($i == $current_page) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search_term); ?>"><?php echo $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php if ($current_page < $total_pages): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?page=<?php echo $current_page + 1; ?>&search=<?php echo urlencode($search_term); ?>">Next</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+
+        </div> <?php
     }
     public function event_details_view($conf, $event, $is_registered = false) {
         ?>
@@ -1033,12 +1067,71 @@ class Layouts {
                                     </div>
                                     <div>
                                         <a href="event-details.php?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-info">View Details</a>
+
+                                        <?php
+                                        // Only show the "Cancel" button for events that are in the future
+                                        $event_date_timestamp = strtotime($event['event_date']);
+                                        $today_timestamp = strtotime(date("Y-m-d"));
+
+                                        if ($event_date_timestamp >= $today_timestamp):
+                                            ?>
+                                            <a href="cancel-registration.php?id=<?php echo $event['id']; ?>"
+                                               class="btn btn-sm btn-danger"
+                                               onclick="return confirm('Are you sure you want to cancel your registration for this event?');">
+                                                Cancel Registration
+                                            </a>
+                                        <?php endif; ?>
                                     </div>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
                     <?php else: ?>
                         <p class="text-center">You haven't registered for any events yet. <a href="events.php">Find an event to attend!</a></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    public function admin_event_attendees_view($conf, $event, $attendees) {
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1>Event Attendees</h1>
+                    <h3 class="text-muted"><?php echo htmlspecialchars($event['title']); ?></h3>
+                </div>
+                <a href="dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Registered Users (<?php echo count($attendees); ?>)</h3>
+                </div>
+                <div class="card-body">
+                    <?php if (count($attendees) > 0): ?>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($attendees as $index => $attendee): ?>
+                                    <tr>
+                                        <td><?php echo $index + 1; ?></td>
+                                        <td><?php echo htmlspecialchars($attendee['fullname']); ?></td>
+                                        <td><?php echo htmlspecialchars($attendee['email']); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <p class="text-center">No users have registered for this event yet.</p>
                     <?php endif; ?>
                 </div>
             </div>
