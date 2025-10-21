@@ -1,6 +1,17 @@
 <?php
 require "ClassAutoLoad.php";
 
+// Check for admin role
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    // Optional: set a message for the user
+    $_SESSION['msg'] = 'You do not have permission to access this page.';
+    $_SESSION['msg_type'] = 'danger';
+
+    // Redirect non-admins to the homepage
+    header("Location: index.php");
+    exit();
+}
+
 // Redirect user to signin page if they are not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: signin.php");

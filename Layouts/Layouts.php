@@ -121,7 +121,18 @@ class Layouts {
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-user-circle"></i> <?php echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Profile'; ?>
+                                <i class="fas fa-user-circle"></i>
+                                <?php
+                                // Start with the user's name or a default 'Profile'
+                                $displayName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : 'Profile';
+
+                                // If the user's role is 'admin', append the label
+                                if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+                                    $displayName .= ' (Admin)';
+                                }
+
+                                echo $displayName;
+                                ?>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>
@@ -293,7 +304,7 @@ class Layouts {
                                         </div>
 
                                         <div class="text-center">
-                                            <p class="small mb-3"><a class="text-muted" href="#!">Forgot password?</a></p>
+                                            <p class="small mb-3"><a class="text-muted" href="forgot-password.php">Forgot password?</a></p>
                                             <p>Don't have an account? <a href="signup.php" class="link-info">Register here</a></p>
                                         </div>
                                     </form>
@@ -594,6 +605,76 @@ class Layouts {
                 </div>
             </div>
         </div>
+        <?php
+    }
+
+    public function forgot_password_form($conf) {
+        ?>
+        <section class="vh-100 bg-image" style="background-image: url('https://strathmore.edu/wp-content/uploads/2023/12/Artboard-1.png');">
+            <div class="mask d-flex align-items-center h-100" style="background-color: rgba(10, 37, 64, 0.8);">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                            <div class="card" style="border-radius: 15px;">
+                                <div class="card-body p-5">
+                                    <?php if(isset($_SESSION['msg'])) { /* ... message display code ... */ } ?>
+                                    <h3 class="text-center mb-4">Forgot Your Password?</h3>
+                                    <p class="text-muted text-center mb-4">Enter your email address and we will send you a link to reset your password.</p>
+                                    <form method="post">
+                                        <input type="hidden" name="forgot_password" value="1">
+                                        <div data-mdb-input-init class="form-outline mb-4">
+                                            <input type="email" name="email" class="form-control form-control-lg" required />
+                                            <label class="form-label">Email Address</label>
+                                        </div>
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary btn-lg">Send Reset Link</button>
+                                        </div>
+                                    </form>
+                                    <div class="text-center mt-4">
+                                        <a href="signin.php">Back to Sign In</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <?php
+    }
+
+    public function reset_password_form($conf, $token) {
+        ?>
+        <section class="vh-100 bg-image" style="background-image: url('https://strathmore.edu/wp-content/uploads/2023/12/Artboard-1.png');">
+            <div class="mask d-flex align-items-center h-100" style="background-color: rgba(10, 37, 64, 0.8);">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                            <div class="card" style="border-radius: 15px;">
+                                <div class="card-body p-5">
+                                    <h3 class="text-center mb-4">Reset Your Password</h3>
+                                    <form method="post">
+                                        <input type="hidden" name="reset_password" value="1">
+                                        <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
+                                        <div data-mdb-input-init class="form-outline mb-4">
+                                            <input type="password" name="password" class="form-control form-control-lg" required />
+                                            <label class="form-label">New Password</label>
+                                        </div>
+                                        <div data-mdb-input-init class="form-outline mb-4">
+                                            <input type="password" name="password_repeat" class="form-control form-control-lg" required />
+                                            <label class="form-label">Repeat New Password</label>
+                                        </div>
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary btn-lg">Reset Password</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <?php
     }
 }

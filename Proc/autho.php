@@ -187,12 +187,89 @@ class autho{
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_name'] = $user['fullname'];
+                $_SESSION['user_role'] = $user['role'];
                 header("Location: index.php");
                 exit();
             } else {
                 // Login failed
                 $ObjFncs->setMsg('msg', 'Invalid email or password, or account not verified.', 'danger');
             }
+        }
+    }
+
+    public function forgotPassword($conf, $ObjFncs, $lang, $ObjSendMail, $ObjDB) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['forgot_password'])) {
+            $email = strtolower($_POST['email']);
+            $user = $ObjDB->fetch("SELECT id, fullname FROM users WHERE email = ?", [$email]);
+
+            if ($user) {
+                // Generate a secure, random token
+                $token = bin2hex(random_bytes(32));
+                $expires = date("Y-m-d H:i:s", time() + 3600); // Token expires in 1 hour
+
+                // Store the token and expiry in the database
+                $ObjDB->query("UPDATE users SET reset_token = ?, reset_token_expires_at = ? WHERE id = ?", [$token, $expires, $user['id']]);
+
+                // Create the reset link
+                $reset_link = $conf['site_url'] . '/reset-password.php?token=' . $token;
+
+                // Send the email
+                $email_variables = [
+                    'site_name' => $conf['site_name'],
+                    'fullname' => $user['fullname'],
+                    'reset_link' => $reset_link
+                ];
+                $mailCnt = [
+                    'name_from' => $conf['site_name'],
+                    'mail_from' => $conf['admin_email'],
+                    'name_to' => $user['fullname'],
+                    'mail_to' => $email,
+                    'subject' => $this->bindEmailTemplate($lang["pass_reset_subj"], $email_variables),
+                    'body' => $this->bindEmailTemplate($lang["pass_reset_body"], $email_variables)
+                ];
+                $ObjSendMail->Send_Mail($conf, $mailCnt);
+            }
+
+            // Always show a generic success message to prevent user enumeration
+            $_SESSION['msg'] = 'If an account with that email exists, a password reset link has been sent.';
+            $_SESSION['msg_type'] = 'success';
+            header("Location: forgot-password.php");
+            exit();
+        }
+    }
+
+    public function resetPassword($conf, $ObjFncs, $ObjDB) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset_password'])) {
+            $token = $_POST['token'];
+            $password = $_POST['password'];
+            $password_repeat = $_POST['password_repeat'];
+
+            // Validate token
+            $user = $ObjDB->fetch("SELECT id FROM users WHERE reset_token = ? AND reset_token_expires_at > NOW()", [$token]);
+
+            if (!$user) {
+                $_SESSION['msg'] = 'Invalid or expired password reset link.';
+                $_SESSION['msg_type'] = 'danger';
+                header("Location: signin.php");
+                exit();
+            }
+
+            // Validate passwords
+            if (strlen($password) < $conf['min_password_length'] || $password !== $password_repeat) {
+                $_SESSION['msg'] = 'Passwords must match and be at least ' . $conf['min_password_length'] . ' characters long.';
+                $_SESSION['msg_type'] = 'danger';
+                header("Location: reset-password.php?token=" . $token);
+                exit();
+            }
+
+            // Update the password and invalidate the token
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            $ObjDB->query("UPDATE users SET password = ?, reset_token = NULL, reset_token_expires_at = NULL WHERE id = ?", [$password_hash, $user['id']]);
+
+            $_SESSION['msg'] = 'Your password has been reset successfully. You can now sign in.';
+            $_SESSION['msg_type'] = 'success';
+            header("Location: signin.php");
+            exit();
         }
     }
 }
