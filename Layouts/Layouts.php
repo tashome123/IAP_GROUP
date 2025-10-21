@@ -616,7 +616,10 @@ class Layouts {
         <div class="container" style="margin-top: 100px;">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1>My Dashboard</h1>
-                <a href="create-event.php" class="btn btn-primary">Create New Event</a>
+                <div>
+                    <a href="admin-users.php" class="btn btn-secondary">Manage Users</a>
+                    <a href="create-event.php" class="btn btn-primary">Create New Event</a>
+                </div>
             </div>
 
             <div class="card">
@@ -909,6 +912,88 @@ class Layouts {
                             <?php endforeach; ?>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    public function profile_view($conf, $user) {
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h2>My Profile</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Full Name</label>
+                                <p class="form-control-plaintext fs-5"><?php echo htmlspecialchars($user['fullname']); ?></p>
+                            </div>
+                            <hr>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Email Address</label>
+                                <p class="form-control-plaintext fs-5"><?php echo htmlspecialchars($user['email']); ?></p>
+                            </div>
+                            <hr>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Role</label>
+                                <p class="fs-5">
+                                <span class="badge bg-<?php echo ($user['role'] === 'admin') ? 'primary' : 'secondary'; ?>">
+                                    <?php echo htmlspecialchars(ucfirst($user['role'])); ?>
+                                </span>
+                                </p>
+                            </div>
+
+                            <div class="mt-4">
+                                <a href="change-password.php" class="btn btn-outline-primary">Change Password</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    public function change_password_form($conf) {
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h2>Change Password</h2>
+                        </div>
+                        <div class="card-body">
+                            <?php
+                            if (isset($_SESSION['msg'])) {
+                                $msg_type = isset($_SESSION['msg_type']) ? $_SESSION['msg_type'] : 'danger';
+                                echo '<div class="alert alert-' . $msg_type . '">' . $_SESSION['msg'] . '</div>';
+                                unset($_SESSION['msg']);
+                                unset($_SESSION['msg_type']);
+                            }
+                            ?>
+                            <form method="POST">
+                                <input type="hidden" name="change_password" value="1">
+                                <div class="mb-3">
+                                    <label class="form-label">Current Password</label>
+                                    <input type="password" name="current_password" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">New Password</label>
+                                    <input type="password" name="new_password" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Repeat New Password</label>
+                                    <input type="password" name="new_password_repeat" class="form-control" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Save New Password</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

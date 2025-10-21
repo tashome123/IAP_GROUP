@@ -272,4 +272,40 @@ class autho{
             exit();
         }
     }
+    public function changePassword($conf, $ObjFncs, $ObjDB) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_password'])) {
+            $current_password = $_POST['current_password'];
+            $new_password = $_POST['new_password'];
+            $new_password_repeat = $_POST['new_password_repeat'];
+            $user_id = $_SESSION['user_id'];
+
+            // Fetch the user's current hashed password from the database
+            $user = $ObjDB->fetch("SELECT password FROM users WHERE id = ?", [$user_id]);
+
+            // 1. Verify the current password is correct
+            if (!$user || !password_verify($current_password, $user['password'])) {
+                $_SESSION['msg'] = 'Your current password is not correct.';
+                $_SESSION['msg_type'] = 'danger';
+                header("Location: change-password.php");
+                exit();
+            }
+
+            // 2. Validate the new password
+            if (strlen($new_password) < $conf['min_password_length'] || $new_password !== $new_password_repeat) {
+                $_SESSION['msg'] = 'New passwords must match and be at least ' . $conf['min_password_length'] . ' characters long.';
+                $_SESSION['msg_type'] = 'danger';
+                header("Location: change-password.php");
+                exit();
+            }
+
+            // 3. Hash and update the new password in the database
+            $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
+            $ObjDB->query("UPDATE users SET password = ? WHERE id = ?", [$password_hash, $user_id]);
+
+            $_SESSION['msg'] = 'Your password has been changed successfully.';
+            $_SESSION['msg_type'] = 'success';
+            header("Location: profile.php");
+            exit();
+        }
+    }
 }
