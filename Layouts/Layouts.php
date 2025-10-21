@@ -515,5 +515,86 @@ class Layouts {
         </html>
         <?php
     }
+
+    public function create_event_form($conf){
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="text-center mb-4">Create a New Event</h2>
+                            <form method="POST">
+                                <div class="mb-3">
+                                    <label class="form-label">Event Title</label>
+                                    <input type="text" name="event_title" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Event Description</label>
+                                    <textarea name="event_description" class="form-control" rows="5" required></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Date</label>
+                                        <input type="date" name="event_date" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Time</label>
+                                        <input type="time" name="event_time" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Location / Venue</label>
+                                    <input type="text" name="event_location" class="form-control" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">Create Event</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    public function dashboard_view($conf, $events){
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>My Dashboard</h1>
+                <a href="create-event.php" class="btn btn-primary">Create New Event</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>My Created Events</h3>
+                </div>
+                <div class="card-body">
+                    <?php if (count($events) > 0): ?>
+                        <ul class="list-group list-group-flush">
+                            <?php foreach ($events as $event): ?>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5><?php echo htmlspecialchars($event['title']); ?></h5>
+                                        <small class="text-muted">
+                                            <?php echo date("F j, Y", strtotime($event['event_date'])); ?> at <?php echo htmlspecialchars($event['location']); ?>
+                                        </small>
+                                    </div>
+                                    <div>
+                                        <a href="#" class="btn btn-sm btn-info">Edit</a>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p class="text-center">You haven't created any events yet. <a href="create-event.php">Get started!</a></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
 }
 
