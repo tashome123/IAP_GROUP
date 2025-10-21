@@ -1,5 +1,10 @@
 <?php
 require "ClassAutoLoad.php";
+
+
+$featured_events = $ObjDB->fetchAll(
+        "SELECT * FROM events WHERE event_date >= CURDATE() ORDER BY event_date ASC, event_time ASC LIMIT 3"
+);
 ?>
     <!doctype html>
     <html lang="en">
@@ -137,49 +142,40 @@ require "ClassAutoLoad.php";
                 </div>
             </div>
         </div>
-<!--Add this later when I can connect actual events-->
-<!--        <div class="py-5">-->
-<!--            <div class="container">-->
-<!--                <div class="row text-center mb-5">-->
-<!--                    <div class="col-12 animate-on-scroll">-->
-<!--                        <h2 class="display-4">Featured Events</h2>-->
-<!--                        <p class="lead text-muted">Check out some of the most popular upcoming events</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="row">-->
-<!--                    <div class="col-md-4 mb-4 animate-on-scroll">-->
-<!--                        <div class="card shadow-sm">-->
-<!--                            <img src="https://placehold.co/600x400/0a2540/D4AF37?text=Tech+Conf+2025" class="card-img-top" alt="Tech Conference">-->
-<!--                            <div class="card-body">-->
-<!--                                <h5 class="card-title">Global Tech Conference 2025</h5>-->
-<!--                                <p class="card-text text-muted">Join industry leaders to discuss the future of technology and innovation.</p>-->
-<!--                                <a href="#" class="btn btn-primary">Learn More</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-4 mb-4 animate-on-scroll delay-1">-->
-<!--                        <div class="card shadow-sm">-->
-<!--                            <img src="https://placehold.co/600x400/0a2540/D4AF37?text=Music+Fest" class="card-img-top" alt="Music Festival">-->
-<!--                            <div class="card-body">-->
-<!--                                <h5 class="card-title">Annual Music & Arts Festival</h5>-->
-<!--                                <p class="card-text text-muted">Experience a weekend of incredible live music, art installations, and food.</p>-->
-<!--                                <a href="#" class="btn btn-primary">Get Tickets</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-4 mb-4 animate-on-scroll delay-2">-->
-<!--                        <div class="card shadow-sm">-->
-<!--                            <img src="https://placehold.co/600x400/0a2540/D4AF37?text=Food+Expo" class="card-img-top" alt="Food Expo">-->
-<!--                            <div class="card-body">-->
-<!--                                <h5 class="card-title">International Food Expo</h5>-->
-<!--                                <p class="card-text text-muted">A culinary journey featuring the best chefs and cuisines from around the world.</p>-->
-<!--                                <a href="#" class="btn btn-primary">View Menu</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="py-5">
+            <div class="container">
+                <div class="row text-center mb-5">
+                    <div class="col-12 animate-on-scroll">
+                        <h2 class="display-4">Featured Events</h2>
+                        <p class="lead text-muted">Check out some of our most popular upcoming events</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <?php if (isset($featured_events) && count($featured_events) > 0): ?>
+                        <?php foreach ($featured_events as $index => $event): ?>
+                            <div class="col-md-4 mb-4 animate-on-scroll delay-<?php echo $index; ?>">
+                                <div class="card h-100 shadow-sm">
+                                    <img src="https://placehold.co/600x400/0a2540/D4AF37?text=<?php echo htmlspecialchars(str_replace(' ', '+', $event['title'])); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title"><?php echo htmlspecialchars($event['title']); ?></h5>
+                                        <p class="card-text text-muted">
+                                            <?php echo date("D, M j, Y", strtotime($event['event_date'])); ?>
+                                            at <?php echo htmlspecialchars($event['location']); ?>
+                                        </p>
+                                        <p class="card-text flex-grow-1"><?php echo htmlspecialchars(substr($event['description'], 0, 80)) . '...'; ?></p>
+                                        <a href="event-details.php?id=<?php echo $event['id']; ?>" class="btn btn-primary mt-auto">Learn More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="col-12 text-center">
+                            <p class="lead text-muted">No featured events at the moment. Check back soon!</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
 
         <div class="bg-light py-5">
             <div class="container">
