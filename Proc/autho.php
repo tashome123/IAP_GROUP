@@ -47,6 +47,12 @@ class autho{
                 $errors['password_error'] = "Password must be at least " . $conf['min_password_length'] . " characters long";
             }
 
+            // Check if passwords match
+            $password_repeat = $_POST['password_repeat'];
+            if ($password !== $password_repeat) {
+                $errors['password_match_error'] = "Passwords do not match";
+            }
+
             // If there are errors, display them
             if (!count($errors)) {
 

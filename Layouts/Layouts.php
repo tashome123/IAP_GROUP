@@ -17,13 +17,7 @@ class Layouts {
             <!-- Font Awesome -->
             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
             <!-- Favicons -->
-            <link rel="apple-touch-icon" href="https://getbootstrap.com/docs/4.6/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
-            <link rel="icon" href="https://getbootstrap.com/docs/4.6/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
-            <link rel="icon" href="https://getbootstrap.com/docs/4.6/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
-            <link rel="manifest" href="https://getbootstrap.com/docs/4.6/assets/img/favicons/manifest.json">
-            <link rel="mask-icon" href="https://getbootstrap.com/docs/4.6/assets/img/favicons/safari-pinned-tab.svg" color="#563d7c">
-            <link rel="icon" href="https://getbootstrap.com/docs/4.6/assets/img/favicons/favicon.ico">
-            <meta name="msapplication-config" content="/docs/4.6/assets/img/favicons/browserconfig.xml">
+            <link rel="icon" href="assets/StrathEventique_Logo.png" type="image/png">
             <meta name="theme-color" content="#563d7c">
             <style>
                 .bd-placeholder-img {
@@ -90,14 +84,25 @@ class Layouts {
     <?php
 
     }
-    
+
     public function navbar($conf){
         $current_page = basename($_SERVER['PHP_SELF']);
         $is_logged_in = isset($_SESSION['user_id']);
         ?>
+
+        <!-- CSS for the navbar hide/show transition -->
+        <style>
+            .navbar {
+                transition: top 0.3s ease-in-out;
+            }
+        </style>
+
         <body>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary"><!-- changed bg-dark -> bg-primary to use override -->
-            <a class="navbar-brand" href="index.php">StrathEventique</a>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+            <a class="navbar-brand d-flex align-items-center" href="index.php">
+                <img src="assets/StrathEventique_Logo.png" alt="StrathEventique Logo" style="height: 35px;" class="me-2">
+                <span>StrathEventique</span>
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -129,6 +134,24 @@ class Layouts {
                 <?php endif; ?>
             </div>
         </nav>
+
+        <!-- JavaScript for the scroll detection logic -->
+        <script>
+            let lastScrollTop = 0;
+            const navbar = document.querySelector('.navbar');
+
+            window.addEventListener("scroll", function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop > lastScrollTop) {
+                    // Scrolling Down
+                    navbar.style.top = "-80px"; // Hides the navbar by moving it up
+                } else {
+                    // Scrolling Up
+                    navbar.style.top = "0"; // Shows the navbar by moving it back to the top
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+            }, false);
+        </script>
         <?php
     }
 
@@ -202,24 +225,25 @@ class Layouts {
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
             <title>Sign In - StrathEventique</title>
 
-            <!-- Bootstrap CSS -->
             <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-            <!-- MDB CSS -->
             <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet">
-            <!-- Font Awesome -->
             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
             <style>
                 /* ensure standalone signin page uses same palette */
                 :root{
-                  --navy: #0a2540;
-                  --navy-dark: #071a30;
-                  --gold: #D4AF37;
-                  --gold-dark: #b98f2b;
+                    --navy: #0a2540;
+                    --navy-dark: #071a30;
+                    --gold: #D4AF37;
+                    --gold-dark: #b98f2b;
                 }
-                .fa-crow { color: var(--gold) !important; }
                 .btn-primary, .btn-info { background-color: var(--navy) !important; border-color: var(--navy) !important; color: var(--gold) !important; }
                 .btn-primary:hover, .btn-info:hover { background-color: var(--navy-dark) !important; color: #fff !important; }
+
+                /* Added styles from signup for consistency */
+                .gradient-custom-3 {
+                    background: linear-gradient(90deg, rgba(10,37,64,0.9) 0%, rgba(10,37,64,0.7) 100%);
+                }
             </style>
         </head>
         <body>
@@ -236,56 +260,53 @@ class Layouts {
         }
         ?>
 
-        <section class="vh-100">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-6 text-black">
+        <section class="vh-100 bg-image" style="background-image: url('https://strathmore.edu/wp-content/uploads/2023/12/Artboard-1.png');">
+            <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+                <div class="container h-100">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                            <div class="card" style="border-radius: 15px;">
+                                <div class="card-body p-5">
 
-                        <div class="px-5 ms-xl-4 d-flex align-items-center">
-                            <img src="" alt="StrathEventique Logo" style="height: 50px; margin-right: 15px; margin-top: 15px;">
-                            <span class="h1 fw-bold mb-0 pt-5 mt-xl-4">StrathEventique</span>
+                                    <div class="text-center mb-4">
+                                        <img src="assets/StrathEventique_Logo.png" alt="StrathEventique Logo" style="height: 80px;" class="me-3">
+                                        <h2 class="text-uppercase text-center d-inline-block align-middle">StrathEventique</h2>
+                                    </div>
+
+                                    <h3 class="fw-normal mb-4 text-center" style="letter-spacing: 1px;">Log In</h3>
+
+                                    <form method="post">
+                                        <input type="hidden" name="signin" value="1">
+
+                                        <div data-mdb-input-init class="form-outline mb-4">
+                                            <input type="email" name="email" id="form2Example18" class="form-control form-control-lg" required />
+                                            <label class="form-label" for="form2Example18">Email address</label>
+                                        </div>
+
+                                        <div data-mdb-input-init class="form-outline mb-4">
+                                            <input type="password" name="password" id="form2Example28" class="form-control form-control-lg" required />
+                                            <label class="form-label" for="form2Example28">Password</label>
+                                        </div>
+
+                                        <div class="pt-1 mb-4">
+                                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <p class="small mb-3"><a class="text-muted" href="#!">Forgot password?</a></p>
+                                            <p>Don't have an account? <a href="signup.php" class="link-info">Register here</a></p>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="d-flex align-items-center px-5 ms-xl-4 mt-4">
-
-                            <form style="width: 23rem;" method="post">
-                                <input type="hidden" name="signin" value="1">
-
-                                <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
-
-                                <div data-mdb-input-init class="form-outline mb-4">
-                                    <input type="email" name="email" id="form2Example18" class="form-control form-control-lg" required />
-                                    <label class="form-label" for="form2Example18">Email address</label>
-                                </div>
-
-                                <div data-mdb-input-init class="form-outline mb-4">
-                                    <input type="password" name="password" id="form2Example28" class="form-control form-control-lg" required />
-                                    <label class="form-label" for="form2Example28">Password</label>
-                                </div>
-
-                                <div class="pt-1 mb-4">
-                                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
-                                </div>
-
-                                <p class="small mb-5 pb-lg-2"><a class="text-muted" href="#!">Forgot password?</a></p>
-                                <p>Don't have an account? <a href="signup.php" class="link-info">Register here</a></p>
-
-                            </form>
-
-                        </div>
-
-                    </div>
-                    <div class="col-sm-6 px-0 d-none d-sm-block">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img3.webp"
-                             alt="Login image" class="w-100 vh-100" style="object-fit: cover; object-position: left;">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-        <!-- MDB JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
         </body>
         </html>
@@ -296,74 +317,95 @@ class Layouts {
         <!doctype html>
         <html lang="en">
         <head>
-            <!-- ...existing code... -->
             <style>
                 /* signup page: navy -> gold gradients and placeholder background */
                 :root{
-                  --navy: #0a2540;
-                  --navy-dark: #071a30;
-                  --gold: #D4AF37;
-                  --gold-dark: #b98f2b;
+                    --navy: #0a2540;
+                    --navy-dark: #071a30;
+                    --gold: #D4AF37;
+                    --gold-dark: #b98f2b;
                 }
                 .gradient-custom-3 {
-                    background: linear-gradient(90deg, rgba(10,37,64,0.9) 0%, rgba(10,37,64,0.6) 100%);
-                }
-                .gradient-custom-4 {
-                    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 100%);
-                    color: var(--navy) !important;
+                    background: linear-gradient(90deg, rgba(10,37,64,0.9) 0%, rgba(10,37,64,0.7) 100%);
                 }
             </style>
         </head>
         <body>
-        <section class="vh-100 bg-image placeholder-bg"
-        style="background-image: url('https://strathmore.edu/wp-content/uploads/2023/12/Artboard-1.png');"
-                 >
+        <section class="vh-100 bg-image"
+                 style="background-image: url('https://strathmore.edu/wp-content/uploads/2023/12/Artboard-1.png');"
+        >
             <div class="mask d-flex align-items-center h-100 gradient-custom-3">
                 <div class="container h-100">
                     <div class="row d-flex justify-content-center align-items-center h-100">
                         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                             <div class="card" style="border-radius: 15px;">
                                 <div class="card-body p-5">
-                                    <h2 class="text-uppercase text-center mb-5">Create an account</h2>
+
+                                    <?php
+                                    // Display general messages or validation errors
+                                    if (isset($_SESSION['msg'])) {
+                                        $msg_type = isset($_SESSION['msg_type']) ? $_SESSION['msg_type'] : 'danger';
+                                        echo '<div class="alert alert-' . $msg_type . ' text-center">';
+                                        echo $_SESSION['msg'];
+                                        if (isset($_SESSION['errors'])) {
+                                            echo '<ul class="list-unstyled mb-0 mt-2">';
+                                            foreach ($_SESSION['errors'] as $error) {
+                                                echo '<li>' . htmlspecialchars($error) . '</li>';
+                                            }
+                                            echo '</ul>';
+                                        }
+                                        echo '</div>';
+                                        unset($_SESSION['msg']);
+                                        unset($_SESSION['msg_type']);
+                                        unset($_SESSION['errors']);
+                                    }
+                                    ?>
+
+                                    <div class="text-center mb-4">
+                                        <img src="assets/StrathEventique_Logo.png" alt="StrathEventique Logo" style="height: 80px;" class="me-3">
+                                        <h2 class="text-uppercase text-center d-inline-block align-middle">StrathEventique</h2>
+                                    </div>
+
+                                    <h3 class="fw-normal mb-4 text-center" style="letter-spacing: 1px;">Create an Account</h3>
 
                                     <form method="post">
                                         <input type="hidden" name="signup" value="1">
 
-                                        <div class="form-outline mb-4">
+                                        <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="text" name="fullname" class="form-control form-control-lg" required />
                                             <label class="form-label">Your Name</label>
                                         </div>
 
-                                        <div class="form-outline mb-4">
+                                        <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="email" name="email" class="form-control form-control-lg" required />
                                             <label class="form-label">Your Email</label>
                                         </div>
 
-                                        <div class="form-outline mb-4">
+                                        <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="password" name="password" class="form-control form-control-lg" required />
                                             <label class="form-label">Password</label>
                                         </div>
 
-                                        <div class="form-outline mb-4">
+                                        <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="password" name="password_repeat" class="form-control form-control-lg" required />
                                             <label class="form-label">Repeat your password</label>
                                         </div>
 
-                                        <div class="form-check text-center mb-5">
-                                            <input class="form-check-input" type="checkbox" name="terms_agree" id="terms_agree" required style="float: none; margin-right: 0.5rem;"/>
-                                            <label class="form-check-label" for="terms_agree">
-                                                I agree to all statements in <a href="#!" class="text-body"><u>Terms of service</u></a>
-                                            </label>
+                                        <div class="d-flex justify-content-center mb-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="terms_agree" id="terms_agree" required />
+                                                <label class="form-check-label" for="terms_agree">
+                                                    I agree to the <a href="#!" class="text-body"><u>Terms of service</u></a>
+                                                </label>
+                                            </div>
                                         </div>
 
-                                        <div class="d-flex justify-content-center">
-                                            <button type="submit" class="btn btn-primary btn-block btn-lg gradient-custom-4">
-                                                Register
-                                            </button>
-                                        </div>
+                                        <button data-mdb-button-init data-mdb-ripple-init type="submit" class="btn btn-primary btn-lg mb-3" style="width: 100%;">Register</button>
                                     </form>
 
-
+                                    <div class="text-center">
+                                        <p class="mb-0">Already have an account? <a href="signin.php" class="link-info">Log in here</a></p>
+                                    </div>
 
                                 </div>
                             </div>
@@ -373,9 +415,7 @@ class Layouts {
             </div>
         </section>
 
-        <!-- Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-        <!-- MDB JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
         </body>
         </html>
@@ -418,7 +458,7 @@ class Layouts {
                                         <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686Z"/>
                                     </svg>
                                 </div>
-                                
+
                                 <h2 class="mb-3">Verify Your Account</h2>
                                 <p class="text-muted mb-4">We've sent a verification code to your email address. Please enter it below to complete your registration.</p>
 
@@ -438,8 +478,8 @@ class Layouts {
                                     <input type="hidden" name="verify_account" value="1">
 
                                     <div class="form-outline mb-4">
-                                        <input type="text" name="verification_code" class="form-control form-control-lg text-center" 
-                                               placeholder="Enter 6-digit code" maxlength="6" required autofocus 
+                                        <input type="text" name="verification_code" class="form-control form-control-lg text-center"
+                                               placeholder="Enter 6-digit code" maxlength="6" required autofocus
                                                pattern="[0-9]{6}" title="Please enter a 6-digit code"/>
                                         <label class="form-label">Verification Code</label>
                                     </div>
@@ -459,7 +499,7 @@ class Layouts {
                                 <hr class="my-4">
 
                                 <p class="text-muted small">
-                                    <a href="signup.php">Back to Sign Up</a> | 
+                                    <a href="signup.php">Back to Sign Up</a> |
                                     <a href="signin.php">Sign In</a>
                                 </p>
                             </div>
