@@ -1,6 +1,7 @@
 <?php
 class Layouts {
     public function header($conf) {
+        $title = isset($conf['title']) && $conf['title'] !== '' ? $conf['title'] : 'StrathEventique';
         ?>
         <head>
             <meta charset="utf-8">
@@ -8,7 +9,7 @@ class Layouts {
             <meta name="description" content="">
             <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
             <meta name="generator" content="Hugo 0.101.0">
-            <title>Jumbotron Template · Bootstrap v4.6</title>
+            <title><?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?></title>
 
             <link rel="canonical" href="https://https://getbootstrap.com/docs/4.6/dist/css/bootstrap.min.css">
             <!-- Bootstrap core CSS -->
@@ -42,6 +43,49 @@ class Layouts {
             </style>
             <!-- Custom styles for this template -->
             <link href="https://https://getbootstrap.com/docs/4.6/dist/css/jumbotron.css" rel="stylesheet">
+
+            <!-- >>> Added: navy & gold color scheme overrides -->
+            <style>
+                :root{
+                  --navy: #0a2540;
+                  --navy-dark: #071a30;
+                  --gold: #D4AF37;
+                  --gold-dark: #b98f2b;
+                }
+
+                /* Navbar */
+                .navbar.bg-primary, .navbar.bg-dark { background-color: var(--navy) !important; }
+                .navbar-brand { color: var(--gold) !important; font-weight: 600; }
+                .navbar-dark .navbar-nav .nav-link { color: rgba(212,175,55,0.95) !important; }
+                .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus,
+                .navbar-dark .navbar-nav .nav-link.active { color: #fff !important; text-shadow: 0 0 6px rgba(10,37,64,0.2); }
+
+                /* Buttons / utilities */
+                .btn-primary, .bg-primary { background-color: var(--navy) !important; border-color: var(--navy) !important; color: var(--gold) !important; }
+                .btn-primary:hover, .btn-primary:focus { background-color: var(--navy-dark) !important; border-color: var(--navy-dark) !important; color: #fff !important; }
+
+                /* Map other common button colors used in pages */
+                .btn-info, .btn-success { background-color: var(--navy) !important; border-color: var(--navy) !important; color: var(--gold) !important; }
+                .btn-info:hover, .btn-success:hover { background-color: var(--navy-dark) !important; border-color: var(--navy-dark) !important; color: #fff !important; }
+
+                /* Light / accent backgrounds -> gold */
+                .bg-light { background-color: var(--gold) !important; color: var(--navy) !important; }
+                .text-muted { color: rgba(0,0,0,0.55) !important; }
+
+                /* Jumbotron / hero tweaks */
+                .jumbotron { background-color: var(--navy) !important; color: var(--gold) !important; }
+                .jumbotron .lead, .jumbotron p { color: rgba(212,175,55,0.95); }
+
+                /* Utility for gold text where needed */
+                .text-gold { color: var(--gold) !important; }
+
+                /* Cards and subtle borders */
+                .card { border-color: rgba(10,37,64,0.08); }
+
+                /* Placeholder background helper for signup */
+                .placeholder-bg { background-image: url('assets/images/signup-bg-placeholder.jpg'); background-size: cover; background-position: center; }
+            </style>
+            <!-- <<< end overrides -->
         </head>
     <?php
 
@@ -52,7 +96,7 @@ class Layouts {
         $is_logged_in = isset($_SESSION['user_id']);
         ?>
         <body>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary"><!-- changed bg-dark -> bg-primary to use override -->
             <a class="navbar-brand" href="index.php">StrathEventique</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -166,19 +210,16 @@ class Layouts {
             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
             <style>
-                .bg-image-vertical {
-                    position: relative;
-                    overflow: hidden;
-                    background-repeat: no-repeat;
-                    background-position: right center;
-                    background-size: auto 100%;
+                /* ensure standalone signin page uses same palette */
+                :root{
+                  --navy: #0a2540;
+                  --navy-dark: #071a30;
+                  --gold: #D4AF37;
+                  --gold-dark: #b98f2b;
                 }
-
-                @media (min-width: 1025px) {
-                    .h-custom-2 {
-                        height: 100%;
-                    }
-                }
+                .fa-crow { color: var(--gold) !important; }
+                .btn-primary, .btn-info { background-color: var(--navy) !important; border-color: var(--navy) !important; color: var(--gold) !important; }
+                .btn-primary:hover, .btn-info:hover { background-color: var(--navy-dark) !important; color: #fff !important; }
             </style>
         </head>
         <body>
@@ -200,12 +241,12 @@ class Layouts {
                 <div class="row">
                     <div class="col-sm-6 text-black">
 
-                        <div class="px-5 ms-xl-4">
-                            <i class="fas fa-crow fa-2x me-3 pt-5 mt-xl-4" style="color: #709085;"></i>
-                            <span class="h1 fw-bold mb-0">StrathEventique</span>
+                        <div class="px-5 ms-xl-4 d-flex align-items-center">
+                            <img src="" alt="StrathEventique Logo" style="height: 50px; margin-right: 15px; margin-top: 15px;">
+                            <span class="h1 fw-bold mb-0 pt-5 mt-xl-4">StrathEventique</span>
                         </div>
 
-                        <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
+                        <div class="d-flex align-items-center px-5 ms-xl-4 mt-4">
 
                             <form style="width: 23rem;" method="post">
                                 <input type="hidden" name="signin" value="1">
@@ -223,7 +264,7 @@ class Layouts {
                                 </div>
 
                                 <div class="pt-1 mb-4">
-                                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" type="submit">Login</button>
+                                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
                                 </div>
 
                                 <p class="small mb-5 pb-lg-2"><a class="text-muted" href="#!">Forgot password?</a></p>
@@ -255,28 +296,28 @@ class Layouts {
         <!doctype html>
         <html lang="en">
         <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Create Account</title>
-
-            <!-- Bootstrap CSS -->
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-
-            <!-- MDB CSS -->
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet">
-
+            <!-- ...existing code... -->
             <style>
+                /* signup page: navy -> gold gradients and placeholder background */
+                :root{
+                  --navy: #0a2540;
+                  --navy-dark: #071a30;
+                  --gold: #D4AF37;
+                  --gold-dark: #b98f2b;
+                }
                 .gradient-custom-3 {
-                    background: linear-gradient(to right, rgba(3, 3, 3, 0.5), rgba(143, 211, 244, 0.5));
+                    background: linear-gradient(90deg, rgba(10,37,64,0.9) 0%, rgba(10,37,64,0.6) 100%);
                 }
                 .gradient-custom-4 {
-                    background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1));
+                    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 100%);
+                    color: var(--navy) !important;
                 }
             </style>
         </head>
         <body>
-        <section class="vh-100 bg-image"
-                 style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+        <section class="vh-100 bg-image placeholder-bg"
+        style="background-image: url('https://strathmore.edu/wp-content/uploads/2023/12/Artboard-1.png');"
+                 >
             <div class="mask d-flex align-items-center h-100 gradient-custom-3">
                 <div class="container h-100">
                     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -308,16 +349,15 @@ class Layouts {
                                             <label class="form-label">Repeat your password</label>
                                         </div>
 
-                                        <div class="form-check d-flex justify-content-center mb-5">
-                                            <input class="form-check-input me-2" type="checkbox" required />
-                                            <label class="form-check-label">
+                                        <div class="form-check text-center mb-5">
+                                            <input class="form-check-input" type="checkbox" name="terms_agree" id="terms_agree" required style="float: none; margin-right: 0.5rem;"/>
+                                            <label class="form-check-label" for="terms_agree">
                                                 I agree to all statements in <a href="#!" class="text-body"><u>Terms of service</u></a>
                                             </label>
                                         </div>
 
                                         <div class="d-flex justify-content-center">
-                                            <button type="submit"
-                                                    class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                                            <button type="submit" class="btn btn-primary btn-block btn-lg gradient-custom-4">
                                                 Register
                                             </button>
                                         </div>
@@ -347,22 +387,22 @@ class Layouts {
         <!doctype html>
         <html lang="en">
         <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Verify Account - StrathEventique</title>
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet">
+            <!-- ...existing code... -->
             <style>
-                .gradient-custom-3 {
-                    background: linear-gradient(to right, rgba(3, 3, 3, 0.5), rgba(143, 211, 244, 0.5));
+                :root{
+                  --navy: #0a2540;
+                  --gold: #D4AF37;
                 }
                 .verification-container {
                     min-height: 100vh;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    background: linear-gradient(135deg, var(--navy) 0%, #11263b 100%);
+                    color: var(--gold);
                 }
+                .text-primary { color: var(--gold) !important; }
+                .btn-primary { background-color: var(--navy) !important; color: var(--gold) !important; border-color: var(--navy) !important; }
             </style>
         </head>
         <body>
@@ -436,3 +476,4 @@ class Layouts {
         <?php
     }
 }
+

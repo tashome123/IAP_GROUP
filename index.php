@@ -6,6 +6,47 @@ require "ClassAutoLoad.php";
 <?php $ObjLayout->header($conf); ?>
 <?php $ObjLayout->navbar($conf); ?>
 
+<!-- Inserted: color scheme overrides (navy blue & gold) -->
+<style>
+:root{
+  --navy: #0a2540;
+  --navy-dark: #071a30;
+  --gold: #D4AF37;
+  --gold-dark: #b98f2b;
+}
+
+/* Replace Bootstrap primary (blue) with navy */
+.bg-primary { background-color: var(--navy) !important; }
+.text-primary { color: var(--navy) !important; }
+.btn-primary { background-color: var(--navy) !important; border-color: var(--navy) !important; color: #fff !important; }
+.btn-primary:hover, .btn-primary:focus { background-color: var(--navy-dark) !important; border-color: var(--navy-dark) !important; }
+
+/* Replace white accents with gold where white was used for contrast */
+.text-white { color: var(--gold) !important; }
+
+/* Light backgrounds/buttons -> gold */
+.bg-light { background-color: var(--gold) !important; color: var(--navy) !important; }
+.btn-light { background-color: var(--gold) !important; color: var(--navy) !important; border-color: var(--gold) !important; }
+.btn-light:hover, .btn-light:focus { background-color: var(--gold-dark) !important; border-color: var(--gold-dark) !important; color: var(--navy) !important; }
+
+/* Outline-light -> gold outline */
+.btn-outline-light {
+  color: var(--gold) !important;
+  border-color: var(--gold) !important;
+}
+.btn-outline-light:hover, .btn-outline-light:focus {
+  background-color: var(--gold) !important;
+  color: var(--navy) !important;
+}
+
+/* Map other small utility color classes (icons etc.) to navy */
+.text-success, .text-info { color: var(--navy) !important; }
+
+/* Minor readability tweaks */
+.card { border-color: rgba(10,37,64,0.08); }
+.text-muted { color: rgba(0,0,0,0.6) !important; }
+</style>
+
 <main role="main">
     <!-- Hero Section -->
     <div class="jumbotron jumbotron-fluid bg-primary text-white" style="margin-top: 56px;">
