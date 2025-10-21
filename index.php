@@ -77,7 +77,7 @@ require "ClassAutoLoad.php";
                     <div class="mt-4 animate-on-scroll delay-2">
                         <h3 class="text-white">Welcome back, <?php echo $_SESSION['user_name']; ?>!</h3>
                         <a href="#events" class="btn btn-light btn-lg mx-2">Browse Events</a>
-                        <a href="#create" class="btn btn-outline-light btn-lg mx-2">Create Event</a>
+                        <a href="create-event.php" class="btn btn-outline-light btn-lg mx-2">Create Event</a>
                     </div>
                 <?php endif; ?>
             </div>

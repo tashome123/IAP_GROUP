@@ -124,8 +124,8 @@ class Layouts {
                                 <i class="fas fa-user-circle"></i> <?php echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Profile'; ?>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>
                                 <a class="dropdown-item" href="profile.php"><i class="fas fa-user"></i> My Profile</a>
-                                <a class="dropdown-item" href="settings.php"><i class="fas fa-cog"></i> Settings</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
                             </div>
@@ -203,7 +203,7 @@ class Layouts {
     public function footer($conf){
         ?>
         <footer class="container">
-            <p>&copy; Company 2017-2024</p>
+            <p>&copy; StrathEventique 2025</p>
         </footer>
 
 
