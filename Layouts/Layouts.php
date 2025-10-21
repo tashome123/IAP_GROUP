@@ -771,7 +771,7 @@ class Layouts {
         </div>
         <?php
     }
-    public function event_details_view($conf, $event) {
+    public function event_details_view($conf, $event, $is_registered = false) {
         ?>
         <div class="container" style="margin-top: 100px;">
             <div class="row justify-content-center">
@@ -800,7 +800,15 @@ class Layouts {
                             <p class="card-text" style="white-space: pre-wrap;"><?php echo htmlspecialchars($event['description']); ?></p>
 
                             <div class="d-grid gap-2 mt-5">
-                                <a href="#" class="btn btn-primary btn-lg">Register for this Event</a>
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <?php if ($is_registered): ?>
+                                        <button class="btn btn-success btn-lg" disabled>✓ Registered</button>
+                                    <?php else: ?>
+                                        <a href="register-for-event.php?id=<?php echo $event['id']; ?>" class="btn btn-primary btn-lg">Register for this Event</a>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <a href="signin.php" class="btn btn-primary btn-lg">Sign In to Register</a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -995,6 +1003,43 @@ class Layouts {
                             </form>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    public function user_dashboard_view($conf, $events) {
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>My Registered Events</h1>
+                <a href="events.php" class="btn btn-primary">Browse More Events</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>My Upcoming Events</h3>
+                </div>
+                <div class="card-body">
+                    <?php if (count($events) > 0): ?>
+                        <ul class="list-group list-group-flush">
+                            <?php foreach ($events as $event): ?>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5><?php echo htmlspecialchars($event['title']); ?></h5>
+                                        <small class="text-muted">
+                                            <?php echo date("F j, Y", strtotime($event['event_date'])); ?> at <?php echo htmlspecialchars($event['location']); ?>
+                                        </small>
+                                    </div>
+                                    <div>
+                                        <a href="event-details.php?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-info">View Details</a>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p class="text-center">You haven't registered for any events yet. <a href="events.php">Find an event to attend!</a></p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
