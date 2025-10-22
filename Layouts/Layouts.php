@@ -300,6 +300,18 @@ class Layouts {
             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
             <style>
+                .password-toggle-icon {
+                    position: absolute;
+                    top: 50%;
+                    right: 10px;
+                    transform: translateY(-50%);
+                    cursor: pointer;
+                    z-index: 5; /* Ensure icon is clickable */
+                }
+                .form-outline {
+                    position: relative; /* Needed for absolute positioning of icon */
+                }
+
                 /* ensure standalone signin page uses same palette */
                 :root{
                     --navy: #0a2540;
@@ -356,6 +368,7 @@ class Layouts {
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="password" name="password" id="form2Example28" class="form-control form-control-lg" required />
                                             <label class="form-label" for="form2Example28">Password</label>
+                                            <i class="fas fa-eye password-toggle-icon" onclick="togglePasswordVisibility('form2Example28', this)"></i>
                                         </div>
 
                                         <div class="pt-1 mb-4">
@@ -378,6 +391,22 @@ class Layouts {
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
+        <script>
+            function togglePasswordVisibility(fieldId, iconElement) {
+                const passwordField = document.getElementById(fieldId);
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    iconElement.classList.remove('fa-eye');
+                    iconElement.classList.add('fa-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    iconElement.classList.remove('fa-eye-slash');
+                    iconElement.classList.add('fa-eye');
+                }
+            }
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
         </body>
         </html>
         <?php
@@ -388,6 +417,18 @@ class Layouts {
         <html lang="en">
         <head>
             <style>
+                .password-toggle-icon {
+                    position: absolute;
+                    top: 50%;
+                    right: 10px;
+                    transform: translateY(-50%);
+                    cursor: pointer;
+                    z-index: 5; /* Ensure icon is clickable */
+                }
+                .form-outline {
+                    position: relative; /* Needed for absolute positioning of icon */
+                }
+
                 /* signup page: navy -> gold gradients and placeholder background */
                 :root{
                     --navy: #0a2540;
@@ -452,13 +493,15 @@ class Layouts {
                                         </div>
 
                                         <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="password" name="password" class="form-control form-control-lg" required />
-                                            <label class="form-label">Password</label>
+                                            <input type="password" name="password" id="signupPassword" class="form-control form-control-lg" required />
+                                            <label class="form-label" for="signupPassword">Password</label>
+                                            <i class="fas fa-eye password-toggle-icon" onclick="togglePasswordVisibility('signupPassword', this)"></i>
                                         </div>
 
                                         <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="password" name="password_repeat" class="form-control form-control-lg" required />
-                                            <label class="form-label">Repeat your password</label>
+                                            <input type="password" name="password_repeat" id="signupPasswordRepeat" class="form-control form-control-lg" required />
+                                            <label class="form-label" for="signupPasswordRepeat">Repeat your password</label>
+                                            <i class="fas fa-eye password-toggle-icon" onclick="togglePasswordVisibility('signupPasswordRepeat', this)"></i>
                                         </div>
 
                                         <div class="d-flex justify-content-center mb-4">
@@ -485,6 +528,22 @@ class Layouts {
             </div>
         </section>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
+        <script>
+            function togglePasswordVisibility(fieldId, iconElement) {
+                const passwordField = document.getElementById(fieldId);
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    iconElement.classList.remove('fa-eye');
+                    iconElement.classList.add('fa-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    iconElement.classList.remove('fa-eye-slash');
+                    iconElement.classList.add('fa-eye');
+                }
+            }
+        </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
         </body>
@@ -875,13 +934,20 @@ class Layouts {
                             <p class="card-text" style="white-space: pre-wrap;"><?php echo htmlspecialchars($event['description']); ?></p>
 
                             <div class="d-grid gap-2 mt-5">
-                                <?php if (isset($_SESSION['user_id'])): ?>
-                                    <?php if ($is_registered): ?>
+                                <?php if (isset($_SESSION['user_id'])): // Check if user is logged in ?>
+
+                                    <?php // ADD THIS CHECK: If user is an admin, show a different message/button
+                                    if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                                        <a href="dashboard.php" class="btn btn-primary btn-lg">Admins Manage Events</a>
+
+                                    <?php // ELSE: User is logged in but not an admin
+                                    elseif ($is_registered): ?>
                                         <button class="btn btn-success btn-lg" disabled>✓ Registered</button>
                                     <?php else: ?>
                                         <a href="register-for-event.php?id=<?php echo $event['id']; ?>" class="btn btn-primary btn-lg">Register for this Event</a>
                                     <?php endif; ?>
-                                <?php else: ?>
+
+                                <?php else: // User is not logged in ?>
                                     <a href="signin.php" class="btn btn-primary btn-lg">Sign In to Register</a>
                                 <?php endif; ?>
                             </div>
