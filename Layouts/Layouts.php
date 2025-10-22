@@ -112,95 +112,101 @@ class Layouts {
 
     }
 
-    public function navbar($conf){
-        $current_page = basename($_SERVER['PHP_SELF']);
-        $is_logged_in = isset($_SESSION['user_id']);
-        ?>
+public function navbar($conf){
+    $current_page = basename($_SERVER['PHP_SELF']);
+    $is_logged_in = isset($_SESSION['user_id']);
+    ?>
 
-        <!-- CSS for the navbar hide/show transition -->
-        <style>
-            .navbar {
-                transition: top 0.3s ease-in-out;
-            }
-        </style>
+    <style>
+        .navbar {
+            transition: top 0.3s ease-in-out;
+        }
+    </style>
 
-        <body>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
-            <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <img src="assets/StrathEventique_Logo.png" alt="StrathEventique Logo" style="height: 35px;" class="me-2">
-                <span>StrathEventique</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item <?php echo ($current_page == 'events.php') ? 'active' : ''; ?>">
-                        <a class="nav-link" href="events.php">Events</a>
+    <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <a class="navbar-brand d-flex align-items-center" href="index.php">
+            <img src="assets/StrathEventique_Logo.png" alt="StrathEventique Logo" style="height: 35px;" class="me-2">
+            <span>StrathEventique</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item <?php echo ($current_page == 'events.php') ? 'active' : ''; ?>">
+                    <a class="nav-link" href="events.php">Events</a>
+                </li>
+
+                <?php if(!$is_logged_in): ?>
+                    <li class="nav-item <?php echo ($current_page == 'signin.php') ? 'active' : ''; ?>">
+                        <a class="nav-link" href="signin.php">Sign In</a>
                     </li>
+                    <li class="nav-item <?php echo ($current_page == 'signup.php') ? 'active' : ''; ?>">
+                        <a class="nav-link" href="signup.php">Sign Up</a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+            <?php if($is_logged_in): ?>
+                <ul class="navbar-nav ml-auto">
 
-                    <?php if(!$is_logged_in): ?>
-                        <li class="nav-item <?php echo ($current_page == 'signin.php') ? 'active' : ''; ?>">
-                            <a class="nav-link" href="signin.php">Sign In</a>
-                        </li>
-                        <li class="nav-item <?php echo ($current_page == 'signup.php') ? 'active' : ''; ?>">
-                            <a class="nav-link" href="signup.php">Sign Up</a>
+                    <?php // ADDED THIS: Show Scan button only for admins
+                    if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                        <li class="nav-item <?php echo ($current_page == 'event-scanner.php') ? 'active' : ''; ?>">
+                            <a class="nav-link" href="scan-ticket.php"><i class="fas fa-qrcode me-1"></i>Scan Tickets</a>
                         </li>
                     <?php endif; ?>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user-circle"></i>
+                            <?php
+                            // Start with the user's name or a default 'Profile'
+                            $displayName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : 'Profile';
+
+                            // If the user's role is 'admin', append the label
+                            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+                                $displayName .= ' (Admin)';
+                            }
+
+                            echo $displayName;
+                            ?>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>
+
+                            <?php // Only show "My Tickets" if user role is NOT 'admin'
+                            if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin'): ?>
+                                <a class="dropdown-item" href="my-tickets.php"><i class="fas fa-ticket-alt"></i> My Tickets</a>
+                            <?php endif; ?>
+
+                            <a class="dropdown-item" href="profile.php"><i class="fas fa-user"></i> My Profile</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </li>
                 </ul>
-                <?php if($is_logged_in): ?>
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-user-circle"></i>
-                                <?php
-                                // Start with the user's name or a default 'Profile'
-                                $displayName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : 'Profile';
+            <?php endif; ?>
+        </div>
+    </nav>
 
-                                // If the user's role is 'admin', append the label
-                                if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
-                                    $displayName .= ' (Admin)';
-                                }
+    <script>
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
 
-                                echo $displayName;
-                                ?>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>
-
-                                <?php // ADD THIS CHECK: Only show "My Tickets" if user role is NOT 'admin'
-                                if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin'): ?>
-                                    <a class="dropdown-item" href="my-tickets.php"><i class="fas fa-ticket-alt"></i> My Tickets</a>
-                                <?php endif; ?>
-
-                                <a class="dropdown-item" href="profile.php"><i class="fas fa-user"></i> My Profile</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                            </div>
-                        </li>
-                    </ul>
-                <?php endif; ?>
-            </div>
-        </nav>
-
-        <!-- JavaScript for the scroll detection logic -->
-        <script>
-            let lastScrollTop = 0;
-            const navbar = document.querySelector('.navbar');
-
-            window.addEventListener("scroll", function() {
-                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                if (scrollTop > lastScrollTop) {
-                    // Scrolling Down
-                    navbar.style.top = "-80px"; // Hides the navbar by moving it up
-                } else {
-                    // Scrolling Up
-                    navbar.style.top = "0"; // Shows the navbar by moving it back to the top
-                }
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
-            }, false);
-        </script>
-        <?php
+        window.addEventListener("scroll", function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop) {
+                // Scrolling Down
+                navbar.style.top = "-80px"; // Hides the navbar by moving it up
+            } else {
+                // Scrolling Up
+                navbar.style.top = "0"; // Shows the navbar by moving it back to the top
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+        }, false);
+    </script>
+    <?php
     }
 
 
@@ -1316,27 +1322,36 @@ class Layouts {
 
                                     <div class="col-md-4 text-center">
                                         <?php
-                                        // --- QR Code Generation (Updated Syntax) ---
-                                        $qrData = "UserID:" . $_SESSION['user_id'] . ";EventID:" . $event['id'];
+                                        // --- QR Code Generation (Corrected Syntax) ---
+                                        $qrData = "RegID:" . $event['registration_id'];
 
-                                        // Use the Builder to configure and build the result directly
-                                        $result = Builder::create() // Use Builder::create() again as per modern API
-                                        ->writer(new PngWriter())
-                                                ->writerOptions([])
-                                                ->data($qrData)
-                                                ->encoding(new Encoding('UTF-8'))
-                                                ->errorCorrectionLevel(ErrorCorrectionLevel::High)
-                                                ->size(150) // Adjust size as needed
-                                                ->margin(10)
-                                                ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
-                                                ->validateResult(false)
-                                                ->build();
+                                        // Instantiate the Builder (can use defaults or pass options here too)
+                                        $builder = new Builder();
+
+                                        // Call the build() method with specific options
+                                        $result = $builder->build(
+                                                writer: new PngWriter(),
+                                                data: $qrData,
+                                                encoding: new Encoding('UTF-8'),
+                                                errorCorrectionLevel: ErrorCorrectionLevel::High,
+                                                size: 150,
+                                                margin: 10,
+                                                roundBlockSizeMode: RoundBlockSizeMode::Margin,
+                                                validateResult: false
+                                        // Add other options like foregroundColor, logoPath etc. here if needed
+                                        );
 
                                         // Get the QR code image data as a base64 URI
                                         $qrCodeUri = $result->getDataUri();
                                         ?>
 
                                         <img src="<?php echo $qrCodeUri; ?>" alt="Event Ticket QR Code" class="img-fluid mt-3 mb-1" style="max-width: 150px;">
+                                        <?php if ($event['checked_in_at']): ?>
+                                            <span class="badge bg-success">Checked In</span>
+                                        <?php else: ?>
+                                            <small class="text-muted d-block">Scan for Verification</small>
+                                        <?php endif; ?>
+                                    </div>
                                         <small class="text-muted d-block">Scan for Verification</small>
                                     </div>
 

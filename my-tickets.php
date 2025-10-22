@@ -18,7 +18,7 @@ $user_id = $_SESSION['user_id'];
 // Fetch upcoming events the user has registered for
 // The JOIN connects registrations to events, filtered by user and future dates
 $registered_events = $ObjDB->fetchAll(
-    "SELECT e.* FROM event_registrations er 
+    "SELECT e.*, er.id as registration_id, er.checked_in_at FROM event_registrations er 
      JOIN events e ON er.event_id = e.id 
      WHERE er.user_id = ? AND e.event_date >= CURDATE() 
      ORDER BY e.event_date ASC, e.event_time ASC",
