@@ -1,4 +1,13 @@
 <?php
+
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Label\LabelAlignment;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+
 class Layouts {
     public function header($conf) {
         $title = isset($conf['title']) && $conf['title'] !== '' ? $conf['title'] : 'StrathEventique';
@@ -158,6 +167,12 @@ class Layouts {
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>
+
+                                <?php // ADD THIS CHECK: Only show "My Tickets" if user role is NOT 'admin'
+                                if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin'): ?>
+                                    <a class="dropdown-item" href="my-tickets.php"><i class="fas fa-ticket-alt"></i> My Tickets</a>
+                                <?php endif; ?>
+
                                 <a class="dropdown-item" href="profile.php"><i class="fas fa-user"></i> My Profile</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -1257,5 +1272,81 @@ class Layouts {
         </div>
         <?php
     }
-}
 
+        public function my_tickets_view($conf, $events) {
+        ?>
+        <div class="container" style="margin-top: 100px;">
+            <div class="text-center mb-5">
+                <h1>My Event Tickets</h1>
+                <p class="lead text-muted">Your registrations for upcoming events.</p>
+            </div>
+
+            <?php if (count($events) > 0): ?>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <?php foreach ($events as $event): ?>
+                        <div class="col">
+                            <div class="card shadow-sm mb-4" style="border-left: 5px solid var(--gold);">
+                                <div class="card-body row align-items-center">
+
+                                    <div class="col-md-8">
+                                        <h4 class="card-title"><?php echo htmlspecialchars($event['title']); ?></h4>
+                                        <p class="card-text mb-2">
+                                            <i class="fas fa-calendar-alt me-2 text-muted"></i> <?php echo date("l, F j, Y", strtotime($event['event_date'])); ?>
+                                        </p>
+                                        <p class="card-text mb-2">
+                                            <i class="fas fa-clock me-2 text-muted"></i> <?php echo date("g:i A", strtotime($event['event_time'])); ?>
+                                        </p>
+                                        <p class="card-text mb-3">
+                                            <i class="fas fa-map-marker-alt me-2 text-muted"></i> <?php echo htmlspecialchars($event['location']); ?>
+                                        </p>
+                                        <a href="event-details.php?id=<?php echo $event['id']; ?>" class="btn btn-outline-primary btn-sm">View Event Details</a>
+                                        <?php
+                                        // Optional: Add Cancel button logic if desired
+                                        $event_date_timestamp = strtotime($event['event_date']);
+                                        $today_timestamp = strtotime(date("Y-m-d"));
+                                        if ($event_date_timestamp >= $today_timestamp):
+                                        ?>
+                                            <a href="cancel-registration.php?id=<?php echo $event['id']; ?>"
+                                               class="btn btn-outline-danger btn-sm float-end"
+                                               onclick="return confirm('Cancel registration for this event?');">
+                                                Cancel Registration
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="col-md-4 text-center">
+                                        <?php
+                                        // --- QR Code Generation (Updated Syntax) ---
+                                        $qrData = "UserID:" . $_SESSION['user_id'] . ";EventID:" . $event['id'];
+
+                                        // Use the Builder to configure and build the result directly
+                                        $result = Builder::create() // Use Builder::create() again as per modern API
+                                        ->writer(new PngWriter())
+                                                ->writerOptions([])
+                                                ->data($qrData)
+                                                ->encoding(new Encoding('UTF-8'))
+                                                ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+                                                ->size(150) // Adjust size as needed
+                                                ->margin(10)
+                                                ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
+                                                ->validateResult(false)
+                                                ->build();
+
+                                        // Get the QR code image data as a base64 URI
+                                        $qrCodeUri = $result->getDataUri();
+                                        ?>
+
+                                        <img src="<?php echo $qrCodeUri; ?>" alt="Event Ticket QR Code" class="img-fluid mt-3 mb-1" style="max-width: 150px;">
+                                        <small class="text-muted d-block">Scan for Verification</small>
+                                    </div>
+
+                                </div> </div> </div> <?php endforeach; ?>
+                </div> <?php else: ?>
+                <div class="text-center">
+                    <p class="lead text-muted">You haven't registered for any upcoming events yet.</p>
+                    <a href="events.php" class="btn btn-primary mt-2">Browse Events</a>
+                </div>
+            <?php endif; ?>
+        </div> <?php // Closing PHP tag for the function
+    } // Closing brace for the function
+}
