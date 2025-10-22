@@ -28,7 +28,33 @@ class Database {
     public function query($sql, $params = []) {
         try {
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute($params);
+
+            if (!empty($params)) {
+                // Check if this is a positional (?) or named (:name) parameter query
+                $is_positional = array_keys($params) === range(0, count($params) - 1);
+
+                foreach ($params as $key => $value) {
+                    // Determine the correct data type for binding
+                    $param_type = PDO::PARAM_STR;
+                    if (is_int($value)) {
+                        $param_type = PDO::PARAM_INT;
+                    } elseif (is_bool($value)) {
+                        $param_type = PDO::PARAM_BOOL;
+                    } elseif (is_null($value)) {
+                        $param_type = PDO::PARAM_NULL;
+                    }
+
+                    if ($is_positional) {
+                        // Bind positional placeholder (e.g., ?, ?, ?)
+                        $stmt->bindValue($key + 1, $value, $param_type);
+                    } else {
+                        // Bind named placeholder (e.g., :name, :email)
+                        $stmt->bindValue(':' . $key, $value, $param_type);
+                    }
+                }
+            }
+
+            $stmt->execute();
             return $stmt;
         } catch(PDOException $e) {
             error_log("Database query error: " . $e->getMessage());

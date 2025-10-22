@@ -20,6 +20,24 @@ class Layouts {
             <link rel="icon" href="assets/StrathEventique_Logo.png" type="image/png">
             <meta name="theme-color" content="#563d7c">
             <style>
+                /* Animation on scroll styles */
+                .animate-on-scroll {
+                    opacity: 0;
+                    transform: translateY(20px);
+                    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+                }
+
+                .animate-on-scroll.is-visible {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+                /* Optional: Staggered delay for cards */
+                .delay-0 { transition-delay: 0ms; } /* Added delay-0 for clarity */
+                .delay-1 { transition-delay: 100ms; }
+                .delay-2 { transition-delay: 200ms; }
+                /* Add more delays if needed */
+
                 .bd-placeholder-img {
                     font-size: 1.125rem;
                     text-anchor: middle;
@@ -584,7 +602,7 @@ class Layouts {
                             }
                             ?>
                             <h2 class="text-center mb-4">Create a New Event</h2>
-                            <form method="POST">
+                            <form method="POST" enctype="multipart/form-data">
                                 <div class="mb-3">
                                     <label class="form-label">Event Title</label>
                                     <input type="text" name="event_title" class="form-control" required>
@@ -606,6 +624,10 @@ class Layouts {
                                 <div class="mb-3">
                                     <label class="form-label">Location / Venue</label>
                                     <input type="text" name="event_location" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Event Cover Image</label>
+                                    <input type="file" name="event_image" class="form-control">
                                 </div>
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-primary btn-lg">Create Event</button>
@@ -765,10 +787,13 @@ class Layouts {
 
             <div class="row">
                 <?php if (count($events) > 0): ?>
-                    <?php foreach ($events as $event): ?>
-                        <div class="col-md-4 mb-4">
+                    <?php foreach ($events as $index => $event): ?>
+                        <div class="col-md-4 mb-4 animate-on-scroll delay-<?php echo ($index % 3); ?>">
                             <div class="card h-100 shadow-sm">
-                                <img src="https://placehold.co/600x400/0a2540/D4AF37?text=<?php echo htmlspecialchars(str_replace(' ', '+', $event['title'])); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                                <?php
+                                $image_url = !empty($event['image_path']) ? $event['image_path'] : "https://placehold.co/600x400/0a2540/D4AF37?text=" . urlencode($event['title']);
+                                ?>
+                                <img src="<?php echo $image_url; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($event['title']); ?>" style="height: 200px; object-fit: cover;">
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title"><?php echo htmlspecialchars($event['title']); ?></h5>
                                     <p class="card-text text-muted">
@@ -783,8 +808,16 @@ class Layouts {
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <div class="col-12">
-                        <p class="text-center text-muted">There are no upcoming events matching your search. Please check back soon!</p>
+                    <div class="col-12 text-center">
+                        <?php
+                        // Check if the logged-in user is an admin
+                        if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'):
+                            ?>
+                            <p class="lead text-muted">No upcoming events found.</p>
+                            <a href="create-event.php" class="btn btn-primary mt-2">Create the First Event!</a>
+                        <?php else: ?>
+                            <p class="lead text-muted">There are no upcoming events matching your search at the moment. Please check back soon!</p>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -819,21 +852,21 @@ class Layouts {
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="card shadow-lg">
-                        <img src="https://placehold.co/800x400/0a2540/D4AF37?text=<?php echo htmlspecialchars(str_replace(' ', '+', $event['title'])); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                        <?php
+                        $image_url = !empty($event['image_path']) ? $event['image_path'] : "https://placehold.co/600x400/0a2540/D4AF37?text=" . urlencode($event['title']);
+                        ?>
+                        <img src="<?php echo $image_url; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($event['title']); ?>" style="height: 1000px; object-fit: cover;">
                         <div class="card-body p-5">
                             <h1 class="card-title mb-3"><?php echo htmlspecialchars($event['title']); ?></h1>
 
-                            <div class="d-flex text-muted mb-4">
-                                <div class="me-4">
-                                    <i class="fas fa-calendar-alt me-2"></i>
+                            <div class="text-muted mb-4">
+                                <div class="mb-2"> <i class="fas fa-calendar-alt me-2"></i>
                                     <?php echo date("l, F j, Y", strtotime($event['event_date'])); ?>
                                 </div>
-                                <div class="me-4">
-                                    <i class="fas fa-clock me-2"></i>
+                                <div class="mb-2"> <i class="fas fa-clock me-2"></i>
                                     <?php echo date("g:i A", strtotime($event['event_time'])); ?>
                                 </div>
-                                <div>
-                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                <div> <i class="fas fa-map-marker-alt me-2"></i>
                                     <?php echo htmlspecialchars($event['location']); ?>
                                 </div>
                             </div>
@@ -867,7 +900,7 @@ class Layouts {
                     <div class="card">
                         <div class="card-body">
                             <h2 class="text-center mb-4">Edit Event</h2>
-                            <form method="POST">
+                            <form method="POST" enctype="multipart/form-data">
                                 <div class="mb-3">
                                     <label class="form-label">Event Title</label>
                                     <input type="text" name="event_title" class="form-control" value="<?php echo htmlspecialchars($event['title']); ?>" required>
@@ -891,6 +924,10 @@ class Layouts {
                                 <div class="mb-3">
                                     <label class="form-label">Location / Venue</label>
                                     <input type="text" name="event_location" class="form-control" value="<?php echo htmlspecialchars($event['location']); ?>" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Event Cover Image</label>
+                                    <input type="file" name="event_image" class="form-control">
                                 </div>
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>

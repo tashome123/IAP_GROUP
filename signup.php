@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require "ClassAutoLoad.php";
 
 $ObjAuth->signup($conf, $ObjFncs, $lang, $ObjSendMail, $ObjDB);

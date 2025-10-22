@@ -80,9 +80,14 @@ $featured_events = $ObjDB->fetchAll(
                     </div>
                 <?php else: ?>
                     <div class="mt-4 animate-on-scroll delay-2">
-                        <h3 class="text-white">Welcome back, <?php echo $_SESSION['user_name']; ?>!</h3>
+                        <h3 class="text-white">Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h3>
                         <a href="events.php" class="btn btn-light btn-lg mx-2">Browse Events</a>
-                        <a href="create-event.php" class="btn btn-outline-light btn-lg mx-2">Create Event</a>
+
+                        <?php // ADD THIS CHECK: Only show "Create Event" if user role is 'admin'
+                        if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                            <a href="create-event.php" class="btn btn-outline-light btn-lg mx-2">Create Event</a>
+                        <?php endif; ?>
+
                     </div>
                 <?php endif; ?>
             </div>
@@ -190,7 +195,7 @@ $featured_events = $ObjDB->fetchAll(
                             <div class="card-body">
                                 <blockquote class="blockquote text-center">
                                     <p class="mb-3">"StrathEventique made organizing our annual conference a breeze. The tools are intuitive and the support is top-notch!"</p>
-                                    <footer class="blockquote-footer">Jane Doe, <cite title="Source Title">Event Organizer</cite></footer>
+                                    <footer class="blockquote-footer">Tashome Makonnen, <cite title="Source Title">Event Organizer</cite></footer>
                                 </blockquote>
                             </div>
                         </div>
@@ -200,7 +205,7 @@ $featured_events = $ObjDB->fetchAll(
                             <div class="card-body">
                                 <blockquote class="blockquote text-center">
                                     <p class="mb-3">"As an attendee, it's my go-to platform for finding interesting local events. The interface is clean and easy to use."</p>
-                                    <footer class="blockquote-footer">John Smith, <cite title="Source Title">Music Enthusiast</cite></footer>
+                                    <footer class="blockquote-footer">Kelly Nyanjua, <cite title="Source Title">Student</cite></footer>
                                 </blockquote>
                             </div>
                         </div>

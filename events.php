@@ -8,10 +8,15 @@ $offset = ($current_page - 1) * $events_per_page;
 // --- END: Pagination Logic ---
 
 $search_term = $_GET['search'] ?? '';
-$sql_base = "FROM events WHERE event_date >= CURDATE()";
+
+// Start with a base query that is always true. This makes adding filters easier.
+$sql_base = "FROM events WHERE 1=1";
 $params = [];
 
-// If there is a search term, modify the SQL query
+// Add the filter for future events.
+$sql_base .= " AND event_date >= CURDATE()";
+
+// If there is a search term, add the search filter.
 if (!empty($search_term)) {
     $sql_base .= " AND (title LIKE ? OR description LIKE ?)";
     $params[] = '%' . $search_term . '%';
@@ -40,6 +45,30 @@ if ($all_events === false) {
 $ObjLayout->header($conf);
 $ObjLayout->navbar($conf);
 // Pass the new pagination variables to the view
-$ObjLayout->public_events_list($conf, $all_events, $search_term, $current_page, $total_pages);
-$ObjLayout->footer($conf);
+$ObjLayout->public_events_list($conf, $all_events, $search_term, $current_page, $total_pages); ?>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const targets = document.querySelectorAll('.animate-on-scroll');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                } else {
+                    // Optional: Remove this line if you want the animation to happen only once
+                    entry.target.classList.remove('is-visible');
+                }
+            });
+        }, {
+            threshold: 0.1 // Triggers when 10% of the element is visible
+        });
+
+        targets.forEach(target => {
+            observer.observe(target);
+        });
+    });
+</script>
+
+<?php $ObjLayout->footer($conf);
 ?>
