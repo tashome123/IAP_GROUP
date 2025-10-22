@@ -971,7 +971,7 @@ class Layouts {
                                 <th>Email</th>
                                 <th>Role</th>
                                 <th style="width: 200px;">Change Role</th>
-                            </tr>
+                                <th style="width: 100px;">Actions</th> </tr>
                             </thead>
                             <tbody>
                             <?php foreach ($users as $user): ?>
@@ -980,9 +980,9 @@ class Layouts {
                                     <td><?php echo htmlspecialchars($user['fullname']); ?></td>
                                     <td><?php echo htmlspecialchars($user['email']); ?></td>
                                     <td>
-                                        <span class="badge bg-<?php echo ($user['role'] === 'admin') ? 'primary' : 'secondary'; ?>">
-                                            <?php echo htmlspecialchars($user['role']); ?>
-                                        </span>
+                                    <span class="badge bg-<?php echo ($user['role'] === 'admin') ? 'primary' : 'secondary'; ?>">
+                                        <?php echo htmlspecialchars($user['role']); ?>
+                                    </span>
                                     </td>
                                     <td>
                                         <form method="POST" class="d-flex">
@@ -995,6 +995,13 @@ class Layouts {
                                             <button type="submit" class="btn btn-sm btn-primary">Save</button>
                                         </form>
                                     </td>
+                                    <td>
+                                        <form method="POST" onsubmit="return confirm('Are you sure you want to delete user <?php echo htmlspecialchars($user['fullname']); ?>? This action cannot be undone.');">
+                                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                            <input type="hidden" name="delete_user" value="1">
+                                            <button type="submit" class="btn btn-sm btn-danger w-100">Delete</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
@@ -1005,6 +1012,7 @@ class Layouts {
         </div>
         <?php
     }
+// You'll also need to include any necessary JavaScript/Bootstrap/jQuery libraries for the confirm dialog to work effectively.
     public function profile_view($conf, $user) {
         ?>
         <div class="container" style="margin-top: 100px;">

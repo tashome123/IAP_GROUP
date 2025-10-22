@@ -80,7 +80,7 @@ $featured_events = $ObjDB->fetchAll(
                     </div>
                 <?php else: ?>
                     <div class="mt-4 animate-on-scroll delay-2">
-                        <h3 class="text-white">Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h3>
+                        <h3 class="text-white">Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h3>
                         <a href="events.php" class="btn btn-light btn-lg mx-2">Browse Events</a>
 
                         <?php // ADD THIS CHECK: Only show "Create Event" if user role is 'admin'
