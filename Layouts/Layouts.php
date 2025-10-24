@@ -1323,7 +1323,7 @@ public function navbar($conf){
                                     <div class="col-md-4 text-center">
                                         <?php
                                         // --- QR Code Generation (Corrected Syntax) ---
-                                        $qrData = "RegID:" . $event['registration_id'];
+                                        $qrData = $conf['site_url'] . '/scan-ticket.php?data=RegID:' . $event['registration_id'];
 
                                         // Instantiate the Builder (can use defaults or pass options here too)
                                         $builder = new Builder();

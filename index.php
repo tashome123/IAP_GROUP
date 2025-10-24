@@ -158,10 +158,15 @@ $featured_events = $ObjDB->fetchAll(
                 <div class="row">
                     <?php if (isset($featured_events) && count($featured_events) > 0): ?>
                         <?php foreach ($featured_events as $index => $event): ?>
-                            <div class="col-md-4 mb-4 animate-on-scroll delay-<?php echo $index; ?>">
+                            <div class="col-md-4 mb-4 animate-on-scroll delay-<?php echo $index; // Using index for delay ?>">
                                 <div class="card h-100 shadow-sm">
-                                    <img src="https://placehold.co/600x400/0a2540/D4AF37?text=<?php echo htmlspecialchars(str_replace(' ', '+', $event['title'])); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($event['title']); ?>">
+                                    <?php
+                                    // Use event image_path if available, otherwise use placeholder
+                                    $image_url = !empty($event['image_path']) ? $event['image_path'] : "https://placehold.co/600x400/0a2540/D4AF37?text=" . urlencode($event['title']);
+                                    ?>
+                                    <img src="<?php echo $image_url; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($event['title']); ?>" style="height: 200px; object-fit: cover;">
                                     <div class="card-body d-flex flex-column">
+                                        ```
                                         <h5 class="card-title"><?php echo htmlspecialchars($event['title']); ?></h5>
                                         <p class="card-text text-muted">
                                             <?php echo date("D, M j, Y", strtotime($event['event_date'])); ?>
