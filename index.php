@@ -68,10 +68,13 @@ $featured_events = $ObjDB->fetchAll(
     </style>
 
     <main role="main">
-        <div class="jumbotron jumbotron-fluid bg-primary text-white" style="margin-top: 56px;">
-            <div class="container text-center py-5">
+        <div class="jumbotron jumbotron-fluid text-white position-relative" style="margin-top: 56px; min-height: 500px; background-image: url('https://gifdb.com/images/high/concert-performing-live-8oii216176ezixfg.gif'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+            <!-- Overlay for better text readability -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 37, 64, 0.6); z-index: 1;"></div>
+            
+            <!-- Content -->
+            <div class="container text-center py-5" style="position: relative; z-index: 2;">
                 <h1 class="display-3 font-weight-bold animate-on-scroll">Welcome to StrathEventique</h1>
-                <p class="lead mb-4 animate-on-scroll delay-1">Your premier platform for discovering and managing amazing events</p>
 
                 <?php if(!isset($_SESSION['user_id'])): ?>
                     <div class="mt-4 animate-on-scroll delay-2">
@@ -161,7 +164,6 @@ $featured_events = $ObjDB->fetchAll(
                             <div class="col-md-4 mb-4 animate-on-scroll delay-<?php echo $index; // Using index for delay ?>">
                                 <div class="card h-100 shadow-sm">
                                     <?php
-                                    // Use event image_path if available, otherwise use placeholder
                                     $image_url = !empty($event['image_path']) ? $event['image_path'] : "https://placehold.co/600x400/0a2540/D4AF37?text=" . urlencode($event['title']);
                                     ?>
                                     <img src="<?php echo $image_url; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($event['title']); ?>" style="height: 200px; object-fit: cover;">
