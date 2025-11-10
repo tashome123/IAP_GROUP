@@ -1,7 +1,7 @@
 <?php
 require "ClassAutoLoad.php";
 
-// Handle signin
+
 $ObjAuth->signin($conf, $ObjFncs, $ObjDB);
 
 $ObjLayout->header($conf);

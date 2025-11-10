@@ -1,7 +1,7 @@
 <?php
 require "ClassAutoLoad.php";
 
-// Call verification method
+
 $ObjAuth->verifyAccount($conf, $ObjFncs, $lang, $ObjSendMail, $ObjDB);
 
 $ObjLayout->header($conf);

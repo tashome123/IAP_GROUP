@@ -29,7 +29,7 @@ class Layouts {
             <link rel="icon" href="assets/StrathEventique_Logo.png" type="image/png">
             <meta name="theme-color" content="#563d7c">
             <style>
-                /* Animation on scroll styles */
+
                 .animate-on-scroll {
                     opacity: 0;
                     transform: translateY(20px);
@@ -41,11 +41,11 @@ class Layouts {
                     transform: translateY(0);
                 }
 
-                /* Optional: Staggered delay for cards */
-                .delay-0 { transition-delay: 0ms; } /* Added delay-0 for clarity */
+
+                .delay-0 { transition-delay: 0ms; }
                 .delay-1 { transition-delay: 100ms; }
                 .delay-2 { transition-delay: 200ms; }
-                /* Add more delays if needed */
+
 
                 .bd-placeholder-img {
                     font-size: 1.125rem;
@@ -65,7 +65,7 @@ class Layouts {
             <!-- Custom styles for this template -->
             <link href="https://https://getbootstrap.com/docs/4.6/dist/css/jumbotron.css" rel="stylesheet">
 
-            <!-- >>> Added: navy & gold color scheme overrides -->
+
             <style>
                 :root{
                   --navy: #0a2540;
@@ -85,7 +85,7 @@ class Layouts {
                 .btn-primary, .bg-primary { background-color: var(--navy) !important; border-color: var(--navy) !important; color: var(--gold) !important; }
                 .btn-primary:hover, .btn-primary:focus { background-color: var(--navy-dark) !important; border-color: var(--navy-dark) !important; color: #fff !important; }
 
-                /* Map other common button colors used in pages */
+
                 .btn-info, .btn-success { background-color: var(--navy) !important; border-color: var(--navy) !important; color: var(--gold) !important; }
                 .btn-info:hover, .btn-success:hover { background-color: var(--navy-dark) !important; border-color: var(--navy-dark) !important; color: #fff !important; }
 
@@ -93,17 +93,17 @@ class Layouts {
                 .bg-light { background-color: var(--gold) !important; color: var(--navy) !important; }
                 .text-muted { color: rgba(0,0,0,0.55) !important; }
 
-                /* Jumbotron / hero tweaks */
+
                 .jumbotron { background-color: var(--navy) !important; color: var(--gold) !important; }
                 .jumbotron .lead, .jumbotron p { color: rgba(212,175,55,0.95); }
 
-                /* Utility for gold text where needed */
+
                 .text-gold { color: var(--gold) !important; }
 
                 /* Cards and subtle borders */
                 .card { border-color: rgba(10,37,64,0.08); }
 
-                /* Placeholder background helper for signup */
+
                 .placeholder-bg { background-image: url('assets/images/signup-bg-placeholder.jpg'); background-size: cover; background-position: center; }
             </style>
             <!-- <<< end overrides -->
@@ -161,10 +161,10 @@ public function navbar($conf){
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-user-circle"></i>
                             <?php
-                            // Start with the user's name or a default 'Profile'
+
                             $displayName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : 'Profile';
 
-                            // If the user's role is 'admin', append the label
+
                             if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
                                 $displayName .= ' (Admin)';
                             }
@@ -197,13 +197,13 @@ public function navbar($conf){
         window.addEventListener("scroll", function() {
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             if (scrollTop > lastScrollTop) {
-                // Scrolling Down
-                navbar.style.top = "-80px"; // Hides the navbar by moving it up
+
+                navbar.style.top = "-80px";
             } else {
-                // Scrolling Up
-                navbar.style.top = "0"; // Shows the navbar by moving it back to the top
+
+                navbar.style.top = "0";
             }
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
         }, false);
     </script>
     <?php
@@ -285,7 +285,7 @@ public function navbar($conf){
 
             <link rel="icon" href="assets/StrathEventique_Logo.png" type="image/png">
             <style>
-                /* Your root color variables */
+
                 :root{
                     --navy: #0a2540;
                     --gold: #D4AF37;
@@ -327,13 +327,13 @@ public function navbar($conf){
                     right: 10px;
                     transform: translateY(-50%);
                     cursor: pointer;
-                    z-index: 5; /* Ensure icon is clickable */
+                    z-index: 5;
                 }
                 .form-outline {
-                    position: relative; /* Needed for absolute positioning of icon */
+                    position: relative;
                 }
 
-                /* ensure standalone signin page uses same palette */
+
                 :root{
                     --navy: #0a2540;
                     --navy-dark: #071a30;
@@ -343,7 +343,7 @@ public function navbar($conf){
                 .btn-primary, .btn-info { background-color: var(--navy) !important; border-color: var(--navy) !important; color: var(--gold) !important; }
                 .btn-primary:hover, .btn-info:hover { background-color: var(--navy-dark) !important; color: #fff !important; }
 
-                /* Added styles from signup for consistency */
+
                 .gradient-custom-3 {
                     background: linear-gradient(90deg, rgba(10,37,64,0.9) 0%, rgba(10,37,64,0.7) 100%);
                 }
@@ -352,7 +352,7 @@ public function navbar($conf){
         <body>
 
         <?php
-        // Display message if exists
+
         if(isset($_SESSION['msg'])) {
             echo '<div class="alert alert-' . $_SESSION['msg_type'] . ' alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 300px;">';
             echo $_SESSION['msg'];
@@ -444,13 +444,13 @@ public function navbar($conf){
                     right: 10px;
                     transform: translateY(-50%);
                     cursor: pointer;
-                    z-index: 5; /* Ensure icon is clickable */
+                    z-index: 5;
                 }
                 .form-outline {
-                    position: relative; /* Needed for absolute positioning of icon */
+                    position: relative;
                 }
 
-                /* signup page: navy -> gold gradients and placeholder background */
+
                 :root{
                     --navy: #0a2540;
                     --navy-dark: #071a30;
@@ -474,7 +474,7 @@ public function navbar($conf){
                                 <div class="card-body p-5">
 
                                     <?php
-                                    // Display general messages or validation errors
+
                                     if (isset($_SESSION['msg'])) {
                                         $msg_type = isset($_SESSION['msg_type']) ? $_SESSION['msg_type'] : 'danger';
                                         echo '<div class="alert alert-' . $msg_type . ' text-center">';
@@ -577,7 +577,7 @@ public function navbar($conf){
         <!doctype html>
         <html lang="en">
         <head>
-            <!-- ...existing code... -->
+
             <style>
                 :root{
                   --navy: #0a2540;
@@ -1099,7 +1099,7 @@ public function navbar($conf){
         </div>
         <?php
     }
-// You'll also need to include any necessary JavaScript/Bootstrap/jQuery libraries for the confirm dialog to work effectively.
+
     public function profile_view($conf, $user) {
         ?>
         <div class="container" style="margin-top: 100px;">
@@ -1209,7 +1209,7 @@ public function navbar($conf){
                                         <a href="event-details.php?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-info">View Details</a>
 
                                         <?php
-                                        // Only show the "Cancel" button for events that are in the future
+
                                         $event_date_timestamp = strtotime($event['event_date']);
                                         $today_timestamp = strtotime(date("Y-m-d"));
 
@@ -1362,6 +1362,6 @@ public function navbar($conf){
                     <a href="events.php" class="btn btn-primary mt-2">Browse Events</a>
                 </div>
             <?php endif; ?>
-        </div> <?php // Closing PHP tag for the function
-    } // Closing brace for the function
+        </div> <?php
+    }
 }

@@ -16,7 +16,7 @@ spl_autoload_register(function ($class_name) use ($directories) {
     }
 });
 
-// Create an instance of the classes
+
 $ObjSendMail = new SendMail();
 $ObjLayout = new Layouts();
 $ObjAuth = new autho();

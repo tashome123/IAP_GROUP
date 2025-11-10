@@ -12,7 +12,7 @@ $featured_events = $ObjDB->fetchAll(
 <?php $ObjLayout->navbar($conf); ?>
 
     <style>
-        /* Animation on scroll styles */
+
         .animate-on-scroll {
             opacity: 0;
             transform: translateY(20px);
@@ -24,7 +24,7 @@ $featured_events = $ObjDB->fetchAll(
             transform: translateY(0);
         }
 
-        /* Added for staggered animation in hero */
+
         .delay-1 { transition-delay: 200ms; }
         .delay-2 { transition-delay: 400ms; }
 
@@ -35,21 +35,21 @@ $featured_events = $ObjDB->fetchAll(
             --gold-dark: #b98f2b;
         }
 
-        /* Replace Bootstrap primary (blue) with navy */
+
         .bg-primary { background-color: var(--navy) !important; }
         .text-primary { color: var(--navy) !important; }
         .btn-primary { background-color: var(--navy) !important; border-color: var(--navy) !important; color: #fff !important; }
         .btn-primary:hover, .btn-primary:focus { background-color: var(--navy-dark) !important; border-color: var(--navy-dark) !important; }
 
-        /* Replace white accents with gold where white was used for contrast */
+
         .text-white { color: var(--gold) !important; }
 
-        /* Light backgrounds/buttons -> gold */
+
         .bg-light { background-color: var(--gold) !important; color: var(--navy) !important; }
         .btn-light { background-color: var(--gold) !important; color: var(--navy) !important; border-color: var(--gold) !important; }
         .btn-light:hover, .btn-light:focus { background-color: var(--gold-dark) !important; border-color: var(--gold-dark) !important; color: var(--navy) !important; }
 
-        /* Outline-light -> gold outline */
+
         .btn-outline-light {
             color: var(--gold) !important;
             border-color: var(--gold) !important;
@@ -59,17 +59,17 @@ $featured_events = $ObjDB->fetchAll(
             color: var(--navy) !important;
         }
 
-        /* Map other small utility color classes (icons etc.) to navy */
+
         .text-success, .text-info { color: var(--navy) !important; }
 
-        /* Minor readability tweaks */
+
         .card { border-color: rgba(10,37,64,0.08); }
         .text-muted { color: rgba(0,0,0,0.6) !important; }
     </style>
 
     <main role="main">
         <div class="jumbotron jumbotron-fluid text-white position-relative" style="margin-top: 56px; min-height: 500px; background-image: url('https://gifdb.com/images/high/concert-performing-live-8oii216176ezixfg.gif'); background-size: cover; background-position: center; background-repeat: no-repeat;">
-            <!-- Overlay for better text readability -->
+
             <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 37, 64, 0.6); z-index: 1;"></div>
             
             <!-- Content -->
@@ -86,7 +86,7 @@ $featured_events = $ObjDB->fetchAll(
                         <h3 class="text-white">Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h3>
                         <a href="events.php" class="btn btn-light btn-lg mx-2">Browse Events</a>
 
-                        <?php // ADD THIS CHECK: Only show "Create Event" if user role is 'admin'
+                        <?php
                         if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
                             <a href="create-event.php" class="btn btn-outline-light btn-lg mx-2">Create Event</a>
                         <?php endif; ?>
@@ -245,7 +245,7 @@ $featured_events = $ObjDB->fetchAll(
                     }
                 });
             }, {
-                threshold: 0.1 // Triggers when 10% of the element is visible
+                threshold: 0.1
             });
 
             targets.forEach(target => {

@@ -1,20 +1,20 @@
 <?php
 require "ClassAutoLoad.php";
 
-// IMPORTANT: Add security check - only admins should run this!
+
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    // You could redirect or show an error
+
     die("Access Denied: Admin privileges required.");
 }
 
 $response = ['status' => 'error', 'message' => 'Invalid request.'];
-$scannedData = $_GET['data'] ?? null; // Assume data comes from URL parameter ?data=...
+$scannedData = $_GET['data'] ?? null;
 
 if ($scannedData && strpos($scannedData, 'RegID:') === 0) {
-    $registrationId = substr($scannedData, 6); // Extract the ID after "RegID:"
+    $registrationId = substr($scannedData, 6);
 
     if (is_numeric($registrationId)) {
-        // Fetch the registration, including event details for display
+
         $registration = $ObjDB->fetch(
             "SELECT er.id, er.checked_in_at, e.title as event_title, u.fullname as user_name 
              FROM event_registrations er
@@ -26,7 +26,7 @@ if ($scannedData && strpos($scannedData, 'RegID:') === 0) {
 
         if ($registration) {
             if ($registration['checked_in_at'] === null) {
-                // Ticket is valid and not yet checked in - Mark it as checked in NOW
+
                 $checkinTime = date("Y-m-d H:i:s");
                 $ObjDB->query(
                     "UPDATE event_registrations SET checked_in_at = ? WHERE id = ?",
@@ -40,7 +40,7 @@ if ($scannedData && strpos($scannedData, 'RegID:') === 0) {
                     'time' => $checkinTime
                 ];
             } else {
-                // Ticket has already been checked in
+
                 $response = [
                     'status' => 'warning',
                     'message' => 'This ticket has already been checked in.',
@@ -50,7 +50,7 @@ if ($scannedData && strpos($scannedData, 'RegID:') === 0) {
                 ];
             }
         } else {
-            // Registration ID not found in the database
+
             $response = ['status' => 'error', 'message' => 'Invalid Ticket: Registration not found.'];
         }
     } else {
@@ -60,7 +60,7 @@ if ($scannedData && strpos($scannedData, 'RegID:') === 0) {
     $response = ['status' => 'error', 'message' => 'No ticket data provided or invalid format.'];
 }
 
-// Display results (simple HTML version)
+
 ?>
 <!DOCTYPE html>
 <html>

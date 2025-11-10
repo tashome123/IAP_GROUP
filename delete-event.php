@@ -9,12 +9,12 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 
 $event_id = $_GET['id'] ?? null;
 
-// If we have an event ID, proceed with deletion
+
 if ($event_id) {
-    // We check that the event belongs to the logged-in user for security
+
     $event = $ObjDB->fetch("SELECT id FROM events WHERE id = ? AND user_id = ?", [$event_id, $_SESSION['user_id']]);
 
-    // If the event exists and belongs to the user, delete it
+
     if ($event) {
         $ObjDB->query("DELETE FROM events WHERE id = ?", [$event_id]);
         $_SESSION['msg'] = 'Event successfully deleted.';
@@ -25,7 +25,7 @@ if ($event_id) {
     }
 }
 
-// Redirect back to the dashboard
+
 header("Location: dashboard.php");
 exit();
 

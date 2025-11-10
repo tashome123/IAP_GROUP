@@ -1,6 +1,6 @@
 <?php
 class fncs{
-    // Set session message
+
     public function setMsg($name, $value, $class){
         if(is_array($value)){
             $_SESSION[$name] = $value;
@@ -9,7 +9,7 @@ class fncs{
         }
     }
 
-    // Display session message
+
     public function getMsg($name){
         if(isset($_SESSION[$name])){
             $msg = $_SESSION[$name];

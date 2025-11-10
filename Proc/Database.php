@@ -10,7 +10,7 @@ class Database {
 
     private function connect() {
         try {
-            // Check if port is specified in host
+
             $host = $this->conf['db_host'];
             if (!str_contains($host, ':')) {
                 $host .= ':3307'; // Add default MySQL port
@@ -30,11 +30,11 @@ class Database {
             $stmt = $this->conn->prepare($sql);
 
             if (!empty($params)) {
-                // Check if this is a positional (?) or named (:name) parameter query
+
                 $is_positional = array_keys($params) === range(0, count($params) - 1);
 
                 foreach ($params as $key => $value) {
-                    // Determine the correct data type for binding
+
                     $param_type = PDO::PARAM_STR;
                     if (is_int($value)) {
                         $param_type = PDO::PARAM_INT;
@@ -45,10 +45,10 @@ class Database {
                     }
 
                     if ($is_positional) {
-                        // Bind positional placeholder (e.g., ?, ?, ?)
+
                         $stmt->bindValue($key + 1, $value, $param_type);
                     } else {
-                        // Bind named placeholder (e.g., :name, :email)
+
                         $stmt->bindValue(':' . $key, $value, $param_type);
                     }
                 }
