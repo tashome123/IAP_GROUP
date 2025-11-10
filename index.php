@@ -100,9 +100,12 @@ $featured_events = $ObjDB->fetchAll(
             <div class="row text-center mb-5">
                 <div class="col-12 animate-on-scroll">
                     <h2 class="display-4">Why Choose StrathEventique?</h2>
+
                     <p class="lead text-muted">Everything you need for event management in one place</p>
                 </div>
             </div>
+
+
 
             <div class="row">
                 <div class="col-md-4 mb-4 animate-on-scroll">
@@ -154,6 +157,34 @@ $featured_events = $ObjDB->fetchAll(
             <div class="container">
                 <div class="row text-center mb-5">
                     <div class="col-12 animate-on-scroll">
+
+                        <div class="bg-light py-5"> <div class="container">
+                                <div class="row text-center mb-5">
+                                    <div class="col-12 animate-on-scroll">
+                                        <h2 class="display-4">See How It Works</h2>
+                                        <p class="lead text-muted">A quick guide to using the StrathEventique platform.</p>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-10 col-lg-8 animate-on-scroll delay-1">
+                                        <div class="embed-responsive embed-responsive-16by9 shadow-sm" style="border-radius: 15px; overflow: hidden;">
+
+                                            <video class="embed-responsive-item"
+                                                   src="assets/IAP%20Video.mp4"
+                                                   title="Platform Tutorial Video"
+                                                   controls
+                                                   preload="metadata">
+                                                Your browser does not support the video tag.
+                                            </video>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+<div class="my-5 py-4">
+    
+</div>
                         <h2 class="display-4">Featured Events</h2>
                         <p class="lead text-muted">Check out some of our most popular upcoming events</p>
                     </div>
