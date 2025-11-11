@@ -170,7 +170,7 @@ $featured_events = $ObjDB->fetchAll(
                                         <div class="embed-responsive embed-responsive-16by9 shadow-sm" style="border-radius: 15px; overflow: hidden;">
 
                                             <video class="embed-responsive-item"
-                                                   src="assets/IAP%20Video.mp4"
+                                                   src="assets/IAP Video.mp4"
                                                    title="Platform Tutorial Video"
                                                    controls
                                                    preload="metadata">

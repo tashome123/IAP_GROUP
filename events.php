@@ -28,7 +28,7 @@ $total_events_query = "SELECT COUNT(*) as count " . $sql_base;
 $total_events = $ObjDB->fetch($total_events_query, $params)['count'];
 $total_pages = ceil($total_events / $events_per_page);
 
-/
+
 $events_query = "SELECT * " . $sql_base . " ORDER BY event_date ASC, event_time ASC LIMIT ? OFFSET ?";
 $params[] = $events_per_page;
 $params[] = $offset;
