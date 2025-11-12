@@ -53,6 +53,59 @@ $all_users = $ObjDB->fetchAll("SELECT id, fullname, email, role FROM users ORDER
 $ObjLayout->header($conf);
 $ObjLayout->navbar($conf);
 $ObjLayout->admin_users_list($conf, $all_users);
+
+?>
+
+<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+    function exportToExcel() {
+
+        TableToExcel.convert(document.getElementById("user-table"), {
+            name: "StrathEventique_Users.xlsx",
+            sheet: {
+                name: "Users"
+            }
+        });
+    }
+
+    function exportToPDF() {
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+
+        doc.autoTable({
+            html: '#user-table',
+
+            columns: [
+                { header: 'ID', dataKey: 'ID' },
+                { header: 'Full Name', dataKey: 'Full Name' },
+                { header: 'Email', dataKey: 'Email' },
+                { header: 'Role', dataKey: 'Role' },
+            ],
+
+            columnStyles: {
+                4: { cellWidth: 0, minCellWidth: 0, cellOpacity: 0 },
+                5: { cellWidth: 0, minCellWidth: 0, cellOpacity: 0 }
+            },
+            didParseCell: function (data) {
+
+                if (data.column.index === 4 || data.column.index === 5) {
+                    data.cell.text = '';
+                }
+            }
+        });
+
+
+        doc.save('StrathEventique_Users.pdf');
+    }
+</script>
+
+<?php
+
 $ObjLayout->footer($conf);
 
 ?>

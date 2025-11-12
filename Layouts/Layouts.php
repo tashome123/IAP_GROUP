@@ -150,12 +150,7 @@ public function navbar($conf){
             <?php if($is_logged_in): ?>
                 <ul class="navbar-nav ml-auto">
 
-                    <?php // ADDED THIS: Show Scan button only for admins
-                    if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-                        <li class="nav-item <?php echo ($current_page == 'event-scanner.php') ? 'active' : ''; ?>">
-                            <a class="nav-link" href="scan-ticket.php"><i class="fas fa-qrcode me-1"></i>Scan Tickets</a>
-                        </li>
-                    <?php endif; ?>
+
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -1045,12 +1040,16 @@ public function navbar($conf){
             ?>
 
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h3>All Registered Users</h3>
+                    <div>
+                        <button class="btn btn-sm btn-success" onclick="exportToExcel()">Export to Excel</button>
+                        <button class="btn btn-sm btn-danger" onclick="exportToPDF()">Export to PDF</button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table id="user-table" class="table table-striped table-hover">
                             <thead>
                             <tr>
                                 <th>ID</th>
